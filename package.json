@@ -1,0 +1,27 @@
+{
+  "name": "mqtt-meta",
+  "version": "0.0.2",
+  "description": "JSON Store with MQTT Interface",
+  "main": "index.js",
+  "preferGlobal": true,
+  "bin": {
+    "mqtt-meta": "./index.js"
+  },
+  "scripts": {
+    "test": "xo --space 4"
+  },
+  "author": "Sebastian Raff <hq@ccu.io> https://github.com/hobbyquaker",
+  "license": "MIT",
+  "dependencies": {
+    "json-persist": "0.0.0",
+    "mqtt": "^2.6.2",
+    "mqtt-wildcard": "^3.0.0",
+    "obj-ease": "0.0.3",
+    "persist-json": "^1.0.1",
+    "yalm": "^4.0.2",
+    "yargs": "^7.1.0"
+  },
+  "devDependencies": {
+    "xo": "^0.18.1"
+  }
+}
