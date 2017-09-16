@@ -3,7 +3,6 @@
 [![NPM version](https://badge.fury.io/js/mqtt-meta.svg)](http://badge.fury.io/js/mqtt-meta)
 [![Dependency Status](https://img.shields.io/gemnasium/hobbyquaker/mqtt-meta.svg?maxAge=2592000)](https://gemnasium.com/github.com/hobbyquaker/mqtt-meta)
 [![Build Status](https://travis-ci.org/hobbyquaker/mqtt-meta.svg?branch=master)](https://travis-ci.org/hobbyquaker/mqtt-meta)
-[![Coverage Status](https://coveralls.io/repos/github/hobbyquaker/mqtt-meta/badge.svg?branch=master)](https://coveralls.io/github/hobbyquaker/mqtt-meta?branch=master)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![License][mit-badge]][mit-url]
 
