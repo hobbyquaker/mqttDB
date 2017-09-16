@@ -5,7 +5,9 @@ const Mqtt = require('mqtt');
 const mw = require('mqtt-wildcard');
 const config = require('./config.js');
 const pkg = require('./package.json');
-const api = require('./lib/api.js')(config);
+const Api = require('./lib/api.js');
+
+const api = new Api(config);
 
 let mqttConnected = false;
 
@@ -90,8 +92,9 @@ api.on('ready', () => {
 });
 
 api.on('update', (id, data) => {
+    log.debug('update', id);
     mqtt.publish(config.name + '/status/' + id, JSON.stringify(data), {retain: true});
-    mqtt.publish(config.name + '/rev', String(api.rev), {retain: true});
+    mqtt.publish(config.name + '/rev',  String(api.rev), {retain: true});
 });
 
 api.on('error', err => {
