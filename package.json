@@ -8,20 +8,26 @@
     "mqtt-meta": "./index.js"
   },
   "scripts": {
-    "test": "xo --space 4"
+    "test": "xo"
   },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "engineStrict": true,
   "author": "Sebastian Raff <hq@ccu.io> https://github.com/hobbyquaker",
   "license": "MIT",
   "dependencies": {
-    "json-persist": "0.0.0",
-    "mqtt": "^2.6.2",
-    "mqtt-wildcard": "^3.0.0",
-    "obj-ease": "0.0.3",
+    "mqtt": "^2.13.0",
+    "mqtt-wildcard": "^3.0.9",
+    "obj-ease": "^1.0.1",
     "persist-json": "^1.0.1",
-    "yalm": "^4.0.2",
-    "yargs": "^7.1.0"
+    "yalm": "^4.1.0",
+    "yargs": "^8.0.2"
   },
   "devDependencies": {
-    "xo": "^0.18.1"
+    "xo": "latest"
+  },
+  "xo": {
+    "space": 4
   }
 }
