@@ -1,0 +1,52 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#container {
+    layout: flex;
+    flex-direction: column;
+    padding: 6px;
+    padding-bottom: 0;
+    height: calc(100% - 14px);
+}
+
+#cmdline {
+    padding: 4px;
+    height: 40px;
+}
+
+#topic {
+    width: 100%;
+}
+
+#main {
+    padding: 4px;
+    height: calc(100% - 76px);
+}
+
+#json {
+    height: 100%;
+    width: 100%;
+}
+
+#jsonlint {
+    display: inline-block;
+    width: 20px;
+}
+
+#footer {
+    padding: 4px;
+    height: 36px;
+    width: 100%;
+}
+
+#confirm {
+    display: inline-block;
+    height: 34px;
+    line-height: 18px;
+    padding: 6px;
+    margin: 0;
+    float: right;
+}

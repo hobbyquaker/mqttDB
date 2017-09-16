@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<title>mqtt-meta</title>
+
+<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="../node_modules/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="style.css">
+
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bootstrap3-typeahead.min.js"></script>
+<script src="../node_modules/json-stringify-pretty-compact/index.js"></script>
+
+<div id="container">
+    <div id="cmdline">
+        <input class="form-control" id="topic" placeholder="id">
+    </div>
+    <div id="main">
+        <textarea class="form-control" id="json"></textarea>
+    </div>
+    <div id="footer">
+        <button class="btn btn-primary" id="save">Save</button>
+        <span style="padding-left: 8px;">JSON <span id="jsonlint"></span></span>
+        <span style="padding-left: 8px;">_rev: <span id="rev"></span></span>
+
+
+        <div class="alert alert-success" role="alert" id="confirm">
+            Object saved.
+        </div>
+    </div>
+</div>
+
+
+<script src="script.js"></script>

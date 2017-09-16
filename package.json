@@ -1,6 +1,6 @@
 {
   "name": "mqtt-meta",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "JSON Store with MQTT Interface",
   "main": "index.js",
   "preferGlobal": true,
@@ -17,6 +17,13 @@
   "author": "Sebastian Raff <hq@ccu.io> https://github.com/hobbyquaker",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.18.1",
+    "bootstrap": "^3.3.7",
+    "express": "^4.15.4",
+    "express-basic-auth": "^1.1.2",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.2.1",
+    "json-stringify-pretty-compact": "https://github.com/hobbyquaker/json-stringify-pretty-compact",
     "mqtt": "^2.13.0",
     "mqtt-wildcard": "^3.0.9",
     "obj-ease": "^1.0.1",

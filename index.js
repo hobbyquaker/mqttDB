@@ -1,12 +1,18 @@
 #!/usr/bin/env node
 
+const path = require('path');
+const oe = require('obj-ease');
 const log = require('yalm');
 const Mqtt = require('mqtt');
 const mw = require('mqtt-wildcard');
 const config = require('./config.js');
 const pkg = require('./package.json');
 const Api = require('./lib/api.js');
+const express = require('express');
+const bodyParser = require('body-parser');
+const basicAuth = require('express-basic-auth');
 
+const app = express();
 const api = new Api(config);
 
 let mqttConnected = false;
@@ -100,3 +106,43 @@ api.on('update', (id, data) => {
 api.on('error', err => {
     log.error(err);
 });
+
+if (!config.webDisable) {
+    app.listen(config.webPort, () => {
+        log.info('http server listening on port', config.webPort);
+    });
+
+    app.use(basicAuth({
+        users: {admin: config.webPassword},
+        challenge: true,
+        realm: 'mqtt-meta ui'
+    }));
+
+    app.get('/', (req, res) => {
+        res.redirect(301, '/ui');
+    });
+    app.use('/ui', express.static(path.join(__dirname, '/ui')));
+    app.use('/node_modules', express.static(path.join(__dirname, '/node_modules')));
+
+    app.get('/ids', (req, res) => {
+        res.end(JSON.stringify(Object.keys(api.db).sort()));
+    });
+
+    app.get('/object', (req, res) => {
+        if (api.db[req.query.id]) {
+            res.send(JSON.stringify(api.db[req.query.id]));
+        } else {
+            res.send('');
+        }
+    });
+
+    app.post('/object', bodyParser.json(), (req, res) => {
+        console.log(req.body);
+        if (req.body.obj._rev !== api.db[req.body.id]._rev) {
+            res.send('rev mismatch ' + api.db[req.body.id]._rev);
+        } else {
+            api.set(req.body.id, req.body.obj);
+            res.send('ok');
+        }
+    });
+}

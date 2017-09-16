@@ -17,6 +17,11 @@
 
 ## Usage
 
+### Web UI
+
+mqtt-meta offers a simple ui, you can reach it on `http://<hostname>:8089` with username/password `admin`/`admin` (can
+be changed via command line params, see `mqtt-meta --help`).
+
 ### Topics on which mqtt-meta publishes
 
 #### `<name>/connected`
@@ -37,6 +42,7 @@ Publishes the database revision.
 
 #### `<name>/del/<id>`
 
+#### `<name>/prop/<id>`
 
 ## License
 
