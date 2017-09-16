@@ -1,3 +1,5 @@
+/* global $, stringify */
+
 const $id = $('#topic');
 const $rev = $('#rev');
 const $save = $('#save');
@@ -17,7 +19,7 @@ function idEvents() {
         }
     });
     $id.blur(() => {
-        getObject($id.val(), true)
+        getObject($id.val(), true);
     });
 }
 
@@ -30,7 +32,6 @@ function getIds() {
         $id.typeahead({source: JSON.parse(body), afterSelect: () => {
             getObject($id.val());
         }});
-
     });
 }
 
@@ -64,13 +65,6 @@ function getObject(id, nofocus) {
 
 getIds();
 
-function idChange() {
-    getObject($id.val());
-}
-
-
-
-
 function jsonLint() {
     try {
         JSON.parse($json.val());
@@ -101,8 +95,8 @@ $save.click(() => {
                 getObject($id.val());
                 getIds();
             } else if (data.startsWith('rev mismatch')) {
-                const match = data.match(/rev mismatch ([0-9]+)/);
-
+                // Todo show popup if data changed while editing
+                // const match = data.match(/rev mismatch ([0-9]+)/);
             }
         }
     });

@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 
 const path = require('path');
-const oe = require('obj-ease');
 const log = require('yalm');
 const Mqtt = require('mqtt');
 const mw = require('mqtt-wildcard');
-const config = require('./config.js');
-const pkg = require('./package.json');
-const Api = require('./lib/api.js');
 const express = require('express');
 const bodyParser = require('body-parser');
 const basicAuth = require('express-basic-auth');
+const config = require('./config.js');
+const pkg = require('./package.json');
+const Api = require('./lib/api.js');
 
 const app = express();
 const api = new Api(config);
@@ -100,7 +99,7 @@ api.on('ready', () => {
 api.on('update', (id, data) => {
     log.debug('update', id);
     mqtt.publish(config.name + '/status/' + id, JSON.stringify(data), {retain: true});
-    mqtt.publish(config.name + '/rev',  String(api.rev), {retain: true});
+    mqtt.publish(config.name + '/rev', String(api.rev), {retain: true});
 });
 
 api.on('error', err => {
@@ -138,11 +137,11 @@ if (!config.webDisable) {
 
     app.post('/object', bodyParser.json(), (req, res) => {
         console.log(req.body);
-        if (req.body.obj._rev !== api.db[req.body.id]._rev) {
-            res.send('rev mismatch ' + api.db[req.body.id]._rev);
-        } else {
+        if (req.body.obj._rev === api.db[req.body.id]._rev) {
             api.set(req.body.id, req.body.obj);
             res.send('ok');
+        } else {
+            res.send('rev mismatch ' + api.db[req.body.id]._rev);
         }
     });
 }
