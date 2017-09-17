@@ -27,7 +27,6 @@ function idEvents() {
         }
     });
     $id.blur(() => {
-        console.log('blur')
         getObject($id.val(), true);
     });
 }
@@ -57,7 +56,9 @@ function getObject(id, nofocus) {
     $.get('/object', {id}, body => {
         $json.val('');
         jsonLint();
-        if (body !== '') {
+        if (body === '') {
+            $delete.attr('disabled', true);
+        } else {
             const obj = JSON.parse(body);
             $rev.html(obj._rev);
             $confirm.show();
@@ -65,8 +66,6 @@ function getObject(id, nofocus) {
             delete obj._rev;
             $json.val(stringify(obj));
             jsonLint();
-        } else {
-            $delete.attr('disabled', true);
         }
         if (!nofocus) {
             $id.blur();
@@ -118,7 +117,6 @@ function save(force) {
     });
 }
 
-
 $confirmConflict.modal({
     backdrop: 'static',
     show: false
@@ -153,7 +151,7 @@ $delete.click(() => {
 });
 
 $deleteReally.click(() => {
-    $.get('/delete', {id: $id.val()}, body => {
+    $.get('/delete', {id: $id.val()}, () => {
         $confirm.hide();
         $json.val('');
         $id.val('');

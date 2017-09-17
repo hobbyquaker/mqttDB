@@ -136,12 +136,10 @@ if (!config.webDisable) {
     });
 
     app.get('/delete', (req, res) => {
-        console.log('delete', req.query.id)
         res.end(api.del(req.query.id));
     });
 
     app.post('/object', bodyParser.json(), (req, res) => {
-        console.log(req.body);
         if (req.body.obj._rev === null || req.body.obj._rev === api.db[req.body.id]._rev) {
             api.set(req.body.id, req.body.obj);
             res.end('ok');
@@ -149,6 +147,4 @@ if (!config.webDisable) {
             res.end('rev mismatch ' + api.db[req.body.id]._rev);
         }
     });
-
-
 }
