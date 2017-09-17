@@ -21,27 +21,55 @@
 mqtt-meta offers a simple ui, you can reach it on `http://<hostname>:8089` with username/password `admin`/`admin` (can
 be changed via command line params, see `mqtt-meta --help`).
 
+### Ids
+
+The id of an object can be any string, slashes are allowed - only the mqtt wildcards `#` and `+` may not occur in the 
+id.
+
+
+### Payload
+
+Payload is always a JSON encoded string.
+
+
 ### Topics on which mqtt-meta publishes
 
-#### `<name>/connected`
+#### `meta/connected`
 
 Publishes `1` when mqtt-meta is started and publishes `2` when all objects are published.
 
-#### `<name>/rev`
+#### `meta/rev`
 
 Publishes the database revision.
 
-#### `<name>/status/<id>`
+#### `meta/status/<id>`
+
+All objects are published retained on the status topic.
+
 
 ### Topics subscribed by mqtt-meta
 
-#### `<name>/set/<id>`
+#### `meta/set/<id>`
 
-#### `<name>/extend/<id>`
+Set (create, overwrite) an object. 
 
-#### `<name>/del/<id>`
+#### `meta/extend/<id>`
 
-#### `<name>/prop/<id>`
+Extend an object.
+
+#### `meta/del/<id>`
+
+Delete an object.
+
+#### `meta/prop/<id>`
+
+Set/extend/delete object properties. Examples Payloads:
+
+* `{"method":"set", "prop": "name", "val": "new name!"}`
+* `{"method":"del", "prop": "name"}`
+
+You can use dot-Notation for `prop` to access nested properties.
+
 
 ## License
 
