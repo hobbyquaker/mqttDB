@@ -137,7 +137,7 @@ if (!config.webDisable) {
 
     app.post('/object', bodyParser.json(), (req, res) => {
         console.log(req.body);
-        if (req.body.obj._rev === api.db[req.body.id]._rev) {
+        if (req.body.obj._rev === null || req.body.obj._rev === api.db[req.body.id]._rev) {
             api.set(req.body.id, req.body.obj);
             res.send('ok');
         } else {
