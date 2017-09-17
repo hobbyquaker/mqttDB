@@ -35,6 +35,8 @@ mqtt.on('connect', () => {
     mqtt.subscribe(config.name + '/del/#');
     log.info('mqtt subscribe', config.name + '/extend/#');
     mqtt.subscribe(config.name + '/extend/#');
+    log.info('mqtt subscribe', config.name + '/query/#');
+    mqtt.subscribe(config.name + '/query/#');
 });
 
 mqtt.on('close', () => {
@@ -71,28 +73,44 @@ mqtt.on('message', (topic, payload) => {
     switch (cmd) {
         case 'set':
         case 'extend':
+        case 'query':
             let data;
-            try {
-                data = JSON.parse(payload);
-            } catch (err) {
-                log.error('malformed payload', err);
-                return;
+            if (payload === '') {
+                data = payload;
+            } else {
+                try {
+                    data = JSON.parse(payload);
+                } catch (err) {
+                    log.error('malformed payload', err);
+                    return;
+                }
             }
-            api[cmd](id, data);
+            try {
+                api[cmd](id, data);
+            } catch (err) {
+                log.error('error in mqtt message handler', err.message);
+            }
+
             break;
         case 'del':
             api.del(id);
             break;
+
         default:
             log.error('unknown cmd', cmd);
     }
 });
 
 api.on('ready', () => {
+    log.info('publishing all objects');
     Object.keys(api.db).forEach(id => {
         mqtt.publish(config.name + '/status/' + id, JSON.stringify(api.db[id]), {retain: true});
     });
     mqtt.publish(config.name + '/rev', String(api.rev), {retain: true});
+    log.info('creating views');
+    Object.keys(api.views).forEach(id => {
+        api.query(id, {condition: api.views[id].condition, filter: api.views[id].filter}, true);
+    });
     mqtt.publish(config.name + '/connected', '2', {retain: true});
 });
 
@@ -100,6 +118,16 @@ api.on('update', (id, data) => {
     log.debug('update', id);
     mqtt.publish(config.name + '/status/' + id, JSON.stringify(data), {retain: true});
     mqtt.publish(config.name + '/rev', String(api.rev), {retain: true});
+});
+
+api.on('view', (id, data) => {
+    if (data && data.error) {
+        log.error('view', id, ':', data);
+    } else {
+        log.debug('view', id, data.length);
+    }
+    const payload = data ? JSON.stringify(data) : '';
+    mqtt.publish(config.name + '/view/' + id, payload, {retain: true});
 });
 
 api.on('error', err => {

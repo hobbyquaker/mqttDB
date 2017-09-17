@@ -27,7 +27,9 @@ function idEvents() {
         }
     });
     $id.blur(() => {
-        getObject($id.val(), true);
+        if (currentId !== $id.val()) {
+            getObject($id.val(), true);
+        }
     });
 }
 
