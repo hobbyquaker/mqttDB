@@ -8,10 +8,12 @@
 
 > JSON Store with MQTT Interface
 
+**Work in Progress**: unfinished, probably full of bugs.
+
 
 ## Install
 
-`npm install -g mqtt-meta`
+`$ npm install -g mqtt-meta`
 
 
 ## Usage
@@ -24,7 +26,8 @@ be changed via command line params, see `mqtt-meta --help`).
 ### Ids
 
 The id of an object can be any string, slashes are allowed - only the mqtt wildcards `#` and `+` may not occur in the 
-id.
+id. As the intended use of mqtt-meta is to manage meta-data that belongs to mqtt topics I suggest to just use the topic
+that is described by the object as id.
 
 ### Create/overwrite an object
 
@@ -57,8 +60,9 @@ following payload:
 If any change on the database happens all views are re-calculated, so if you add another object with `"type": "light"`
 mqtt-meta will immediately publish the updated view with the new member.
 
-Besided the possibility to select objects with a condition you can also use the attribute filter to match object ids
-to an mqtt-style wildcard.
+Besides the possibility to select objects with a condition you can also use the attribute filter to match object ids
+to an mqtt-style wildcard. Example payload: 
+`{"filter": "hue/lights/#", "condition": "if (this.type === 'light') return this._id"}`
 
 ### Internal properties
 
@@ -116,6 +120,7 @@ You can use dot-Notation for `prop` to access nested properties.
 #### `meta/query/<id>`
 
 Create or overwrite a view. Use an empty string payload to delete a view.
+
 
 ## Disclaimer
 
