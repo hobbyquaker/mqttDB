@@ -12,6 +12,47 @@
 <script src="bootstrap3-typeahead.min.js"></script>
 <script src="../node_modules/json-stringify-pretty-compact/index.js"></script>
 
+<div class="modal" id="confirm-del">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Really delete?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><span class="topic"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button id="delete-really" type="button" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="confirm-conflict">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Save conflict</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><span class="topic"></span> changed on the server while you we're editing.</p>
+                <p>Your rev: <span id="revEdited"></span>, Server rev: <span id="revServer"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button id="save-force" type="button" class="btn btn-warning">Force save</button>
+                <button id="reload" type="button" class="btn btn-warning">Reload object</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="container">
     <div id="cmdline">
         <input class="form-control" id="topic" placeholder="id">
@@ -20,10 +61,10 @@
         <textarea class="form-control" id="json"></textarea>
     </div>
     <div id="footer">
-        <button class="btn btn-primary" id="save">Save</button>
         <span style="padding-left: 8px;">JSON <span id="jsonlint"></span></span>
         <span style="padding-left: 8px;">_rev: <span id="rev"></span></span>
-
+        <button class="btn btn-primary" id="save">Save</button>
+        <button class="btn btn-danger" id="delete">Delete</button>
 
         <div class="alert alert-success" role="alert" id="confirm">
             Object saved.

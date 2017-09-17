@@ -29,11 +29,17 @@ html, body {
 #json {
     height: 100%;
     width: 100%;
+    resize: none;
 }
 
 #jsonlint {
     display: inline-block;
     width: 20px;
+}
+
+#rev {
+    display: inline-block;
+    width: 60px;
 }
 
 #footer {
@@ -49,4 +55,12 @@ html, body {
     padding: 6px;
     margin: 0;
     float: right;
+}
+
+.modal-title {
+    display: inline-block;
+}
+
+.topic {
+    font-weight: bold;
 }
