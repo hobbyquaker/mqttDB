@@ -1,15 +1,17 @@
 html, body {
     height: 100%;
     margin: 0;
-    padding: 0;
+    padding: 2px;
 }
 
 #container {
+    height: calc(100% - 46px);
+}
+
+#objects, #views {
     layout: flex;
     flex-direction: column;
-    padding: 6px;
-    padding-bottom: 0;
-    height: calc(100% - 14px);
+       height: 100%;
 }
 
 #cmdline {
@@ -30,6 +32,7 @@ html, body {
     height: 100%;
     width: 100%;
     resize: none;
+    font-family: monospace;
 }
 
 #jsonlint {

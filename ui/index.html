@@ -53,7 +53,17 @@
     </div>
 </div>
 
-<div id="container">
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item active">
+        <a class="nav-link" href="#objects" data-toggle="tab" aria-controls="objects">Objects</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#views" data-toggle="tab" aria-controls="views">Views</a>
+    </li>
+</ul>
+<div class="tab-content" id="container">
+    <div class="tab-pane active" role="tabpanel" id="objects">
     <div id="cmdline">
         <input class="form-control" id="topic" placeholder="id">
     </div>
@@ -71,6 +81,9 @@
         </div>
     </div>
 </div>
-
+    <div class="tab-pane" role="tabpanel" id="views">
+        views...
+    </div>
+</div>
 
 <script src="script.js"></script>
