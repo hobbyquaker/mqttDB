@@ -1,6 +1,6 @@
 {
   "name": "mqtt-meta",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "JSON Store with MQTT Interface",
   "main": "index.js",
   "preferGlobal": true,
@@ -8,11 +8,12 @@
     "mqtt-meta": "./index.js"
   },
   "scripts": {
-    "test": "xo"
+    "test": "camo-purge ; xo"
   },
   "engines": {
     "node": ">=6.0.0"
   },
+  "repository": "https://github.com/hobbyquaker/mqtt-meta",
   "engineStrict": true,
   "author": "Sebastian Raff <hq@ccu.io> https://github.com/hobbyquaker",
   "license": "MIT",
@@ -32,6 +33,7 @@
     "yargs": "^8.0.2"
   },
   "devDependencies": {
+    "camo-purge": "^1.0.2",
     "xo": "latest"
   },
   "xo": {
