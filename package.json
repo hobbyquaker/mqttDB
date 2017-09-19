@@ -20,6 +20,7 @@
   "dependencies": {
     "body-parser": "^1.18.1",
     "bootstrap": "^3.3.7",
+    "codemirror": "^5.29.0",
     "express": "^4.15.4",
     "express-basic-auth": "^1.1.2",
     "font-awesome": "^4.7.0",
@@ -29,6 +30,7 @@
     "mqtt-wildcard": "^3.0.9",
     "obj-ease": "^1.0.1",
     "persist-json": "^1.0.1",
+    "socket.io": "^2.0.3",
     "yalm": "^4.1.0",
     "yargs": "^8.0.2"
   },

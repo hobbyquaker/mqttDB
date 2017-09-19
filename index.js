@@ -12,6 +12,9 @@ const pkg = require('./package.json');
 const Api = require('./lib/api.js');
 
 const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+
 const api = new Api(config);
 
 let mqttConnected = false;
@@ -121,6 +124,7 @@ api.on('update', (id, data) => {
 });
 
 api.on('view', (id, data) => {
+    io.emit('updateView', id);
     if (data && data.error) {
         log.error('view', id, ':', data);
     } else {
@@ -135,15 +139,16 @@ api.on('error', err => {
 });
 
 if (!config.webDisable) {
-    app.listen(config.webPort, () => {
-        log.info('http server listening on port', config.webPort);
-    });
+    server.listen(config.webPort);
+    log.info('http server listening on port', config.webPort);
 
+    /*
     app.use(basicAuth({
         users: {admin: config.webPassword},
         challenge: true,
         realm: 'mqtt-meta ui'
     }));
+    */
 
     app.get('/', (req, res) => {
         res.redirect(301, '/ui');
@@ -151,8 +156,56 @@ if (!config.webDisable) {
     app.use('/ui', express.static(path.join(__dirname, '/ui')));
     app.use('/node_modules', express.static(path.join(__dirname, '/node_modules')));
 
+    io.on('connection', socket => {
+        socket.emit('objectIds', Object.keys(api.db).sort());
+        socket.emit('viewIds', Object.keys(api.views).sort());
+
+        socket.on('getObject', (id, cb) => {
+            cb(api.db[id]);
+        });
+
+        socket.on('getView', (id, cb) => {
+            cb(api.views[id]);
+        });
+
+        socket.on('set', (id, data, cb) => {
+            if (data._rev === null || data._rev === api.db[id]._rev) {
+                api.set(id, data);
+                socket.emit('objectIds', Object.keys(api.db).sort());
+                cb('ok');
+            } else {
+                cb('rev mismatch ' + api.db[id]._rev);
+            }
+        });
+
+        socket.on('del', (id, cb) => {
+            api.del(id);
+            cb('ok');
+            socket.emit('objectIds', Object.keys(api.db).sort());
+        });
+
+        socket.on('query', (id, payload, cb) => {
+            api.query(id, payload);
+            cb('ok');
+            socket.emit('viewIds', Object.keys(api.views).sort());
+        });
+    });
+
+    /*
     app.get('/ids', (req, res) => {
         res.end(JSON.stringify(Object.keys(api.db).sort()));
+    });
+
+    app.get('/views', (req, res) => {
+        res.end(JSON.stringify(Object.keys(api.views).sort()));
+    });
+
+    app.get('/view', (req, res) => {
+        if (api.views[req.query.id]) {
+            res.end(JSON.stringify(api.views[req.query.id]));
+        } else {
+            res.end('');
+        }
     });
 
     app.get('/object', (req, res) => {
@@ -175,4 +228,10 @@ if (!config.webDisable) {
             res.end('rev mismatch ' + api.db[req.body.id]._rev);
         }
     });
+    app.post('/view', bodyParser.json(), (req, res) => {
+
+        api.query(req.body.id, {condition: req.body.condition, filter: req.body.filter});
+        res.end('ok');
+    });
+    */
 }

@@ -8,31 +8,63 @@ html, body {
     height: calc(100% - 46px);
 }
 
-#objects, #views {
+#tab-objects, #tab-views {
     layout: flex;
     flex-direction: column;
-       height: 100%;
+    height: 100%;
 }
 
-#cmdline {
+.input-line {
     padding: 4px;
     height: 40px;
+}
+
+.view-config {
+    padding: 4px;
+}
+
+#editor-container {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 76px;
+    margin: 4px;
+}
+
+.code {
+    white-space: pre;
+    font-family: monospace;
+}
+
+.CodeMirror {
+    height: 70px;
+    width: calc(100% - 8px);
+}
+
+#view-main {
+    height: calc(100% - 205px);
+    padding: 4px;
 }
 
 #topic {
     width: 100%;
 }
 
-#main {
+#object-area {
     padding: 4px;
     height: calc(100% - 76px);
 }
 
-#json {
+#input-object {
     height: 100%;
     width: 100%;
     resize: none;
-    font-family: monospace;
+}
+
+#input-view-result {
+    white-space: pre;
+    display: block;
+    overflow-y: scroll;
+    height: 100%
 }
 
 #jsonlint {
@@ -40,21 +72,21 @@ html, body {
     width: 20px;
 }
 
-#rev {
+#object-rev {
     display: inline-block;
     width: 60px;
 }
 
-#footer {
+#footer, #viewbuttons {
     padding: 4px;
     height: 36px;
     width: 100%;
 }
 
-#confirm {
+#indicator-object-saved, #indicator-view-saved {
     display: inline-block;
     height: 34px;
-    line-height: 18px;
+    line-height: 23px;
     padding: 6px;
     margin: 0;
     float: right;
