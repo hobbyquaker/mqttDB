@@ -78,10 +78,10 @@ To delete the object from the previous example just publish on `meta/del/hue/lig
 
 ### Views
 
-You can create views that publish an array of objects that match certain criteria by publishing a `map` function, a 
-`reduce` function and an optional `filter` to the `meta/query/<view-id>` topic. The map can be any valid Javascript 
-code, if you want to add something to the view you just have to return it. In the map function `this` refers to a 
-document, the function is then applied to all documents to compose the view.
+You can create views that publish an array of objects that match certain criteria by publishing a `map` function, an 
+optional `reduce` function and an optional `filter` to the `meta/query/<view-id>` topic. The map and reduce functions
+can be any valid  Javascript code, if you want to add something to the view you just have to return it. In the map 
+function `this` refers to a document, the function is then applied to all documents to compose the view.
 
 This is loosely inspired by CouchDB and MapReduce, but this is _not_ a _"real"_ MapReduce implementation, the map 
 function is just called for every object, the reduce function can then work on the result array of the map function.
@@ -103,14 +103,15 @@ _mqtt-meta_ will immediately re-compose all views and then publish the updated v
 
 Besides the possibility to select objects with a map script you can also use the property `filter` to match documents
 ids to an mqtt-style wildcard. Example payload: 
-`{"filter": "hue/lights/#", "condition": "if (this.type === 'color light') return this._id"}`
+`{"filter": "hue/lights/#", "map": "if (this.type === 'color light') return this._id"}`
 
 The views are composed in separate worker processes, _mqtt-meta_ will spawn as many workers as CPU cores are available.
 The map scripts are executed in a minimal sandbox, so you don't have access to Node.js globals like e.g. `console` 
 or `require`. The documents in the workers are frozen, so no change on the database contents is possible by the map and
 reduce scripts.
 
-See the [Wiki](https://github.com/hobbyquaker/mqtt-meta/wiki/Views) for more examples on creating views with the Web UI.
+**See the [Wiki](https://github.com/hobbyquaker/mqtt-meta/wiki/Views)** for more examples on creating views with the 
+Web UI.
 
 
 ### Internal properties
