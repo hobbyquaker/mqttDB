@@ -2,19 +2,25 @@
 
 <title>mqtt-meta</title>
 
+<link rel="stylesheet" href="../node_modules/codemirror/lib/codemirror.css">
+<link rel="stylesheet" href="../node_modules/codemirror/addon/fold/foldgutter.css">
 <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="../node_modules/font-awesome/css/font-awesome.min.css">
-<link rel="stylesheet" href="../node_modules/codemirror/lib/codemirror.css">
 <link rel="stylesheet" href="style.css">
 
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/jquery-resizable-dom/dist/jquery-resizable.min.js"></script>
 <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="bootstrap3-typeahead.min.js"></script>
+<script src="../node_modules/bootstrap-3-typeahead/bootstrap3-typeahead.min.js"></script>
 <script src="../node_modules/json-stringify-pretty-compact/index.js"></script>
+
 <script src="../node_modules/codemirror/lib/codemirror.js"></script>
 <script src="../node_modules/codemirror/mode/javascript/javascript.js"></script>
-<script src="../node_modules/codemirror/addon/hint/javascript-hint.js"></script>
+<script src="../node_modules/codemirror/addon/edit/closebrackets.js"></script>
+<script src="../node_modules/codemirror/addon/fold/foldcode.js"></script>
+<script src="../node_modules/codemirror/addon/fold/foldgutter.js"></script>
+<script src="../node_modules/codemirror/addon/fold/brace-fold.js"></script>
 
 <script src="/socket.io/socket.io.js"></script>
 
@@ -68,7 +74,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p><span class="topic"></span> changed on the server while you we're editing.</p>
+                <p><span id="object-conflict-id"></span> changed on the server while you were editing.</p>
                 <p>Your rev: <span id="object-rev-editor"></span>, Server rev: <span id="object-rev-server"></span></p>
             </div>
             <div class="modal-footer">
@@ -93,18 +99,21 @@
         <div class="input-line">
             <input class="form-control" id="input-object-id" placeholder="id">
         </div>
-        <div id="object-area">
-            <textarea class="form-control" id="input-object" class="code"></textarea>
+        <div id="object-editor-container" class="editor-container">
+            <input id="input-object">
         </div>
-        <div id="footer">
-            <button class="btn btn-primary" id="button-save-object">Save</button>
-            <button class="btn btn-danger" id="button-del-object">Delete</button>
+        <div id="object-buttons">
+            <div class="buttons-left">
+                <button class="btn btn-primary" id="button-save-object">Save</button>
+                <button class="btn btn-danger" id="button-del-object">Delete</button>
+                <span style="padding-left: 8px;">JSON <span id="jsonlint"></span></span>
+                <span style="padding-left: 8px;">_rev: <span id="object-rev"></span></span>
 
-            <span style="padding-left: 8px;">JSON <span id="jsonlint"></span></span>
-            <span style="padding-left: 8px;">_rev: <span id="object-rev"></span></span>
-
-            <div class="alert alert-success" role="alert" id="indicator-object-saved">
-                Object saved.
+            </div>
+            <div class="buttons-right">
+                <div class="alert alert-success" role="alert" id="indicator-object-saved">
+                    Object saved.
+                </div>
             </div>
         </div>
     </div>
@@ -113,24 +122,50 @@
         <div class="input-line">
             <input class="form-control" id="input-view-id" placeholder="id">
         </div>
-        <div id="editor-container">
-            <textarea class="" id="input-view-condition" rows="3"></textarea>
-        </div>
+
         <div class="view-config">
             <input class="form-control" id="input-view-filter" placeholder="filter">
         </div>
 
-        <div class="view-config">
-            <button class="btn btn-primary" id="button-save-view">Save</button>
-            <button class="btn btn-danger" id="button-del-view">Delete</button>
-            <span style="padding-left: 8px;">_rev: <span id="views-rev"></span></span>
-            <div class="alert alert-success" role="alert" id="indicator-view-saved">
-                View saved.
-            </div>
-        </div>
 
-        <div id="view-main">
-            <div id="input-view-result" class="code form-control"></div>
+        <div class="panel-container-vertical">
+
+            <div class="panel-top">
+                <div class="panel-container-horizontal">
+                    <div class="panel-left">
+                        <div id="map-editor-container" class="editor-container">
+                            <input id="input-view-map">
+                        </div>
+                    </div>
+                    <div class="splitter-vertical"></div>
+                    <div class="panel-right">
+                        <div id="reduce-editor-container" class="editor-container">
+                            <input id="input-view-reduce">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="view-config" id="view-buttons">
+                    <div class="buttons-left">
+                        <button class="btn btn-primary" id="button-save-view">Save</button>
+                        <button class="btn btn-danger" id="button-del-view">Delete</button>
+                    </div>
+                    <div class="buttons-right">
+                        <div class="alert alert-success" role="alert" id="indicator-view-saved">
+                            View saved.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="splitter-horizontal">
+            </div>
+
+            <div class="panel-bottom">
+                <div id="result-editor-container" class="editor-container">
+                    <input id="input-view-result">
+                </div>
+            </div>
         </div>
 
     </div>

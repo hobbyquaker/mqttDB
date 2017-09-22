@@ -23,11 +23,21 @@ html, body {
     padding: 4px;
 }
 
-#editor-container {
+#map-editor-container, #reduce-editor-container {
+    height: calc(100% - 8px);
+}
+
+.editor-container {
     border: 1px solid #ccc;
     border-radius: 4px;
-    height: 76px;
     margin: 4px;
+}
+
+.editor-container:focus-within {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
 }
 
 .code {
@@ -36,28 +46,36 @@ html, body {
 }
 
 .CodeMirror {
-    height: 70px;
-    width: calc(100% - 8px);
+    height: 100%;
+    width: 100%;
+    border-radius: 4px;
 }
 
-#view-main {
-    height: calc(100% - 205px);
-    padding: 4px;
+#map-editor-container .CodeMirror, #reduce-editor-container .CodeMirror {
+    height: 100%;
 }
+
+#result-editor-container {
+    position: absolute;
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+}
+
+#result-editor-container .CodeMirror {
+    height: 100%;
+}
+
+.CodeMirror-scroll {
+    border-radius: 4px;
+}
+
 
 #topic {
     width: 100%;
 }
 
-#object-area {
-    padding: 4px;
-    height: calc(100% - 76px);
-}
-
-#input-object {
-    height: 100%;
-    width: 100%;
-    resize: none;
+#object-editor-container {
+    height: calc(100% - 84px);
 }
 
 #input-view-result {
@@ -77,19 +95,23 @@ html, body {
     width: 60px;
 }
 
-#footer, #viewbuttons {
-    padding: 4px;
-    height: 36px;
+#object-buttons, #view-buttons {
+    padding: 2px 4px 0px 4px;
+    height: 38px;
     width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.buttons-left {
+    flex-grow: 1;
 }
 
 #indicator-object-saved, #indicator-view-saved {
-    display: inline-block;
     height: 34px;
     line-height: 23px;
     padding: 6px;
     margin: 0;
-    float: right;
 }
 
 .modal-title {
@@ -98,4 +120,63 @@ html, body {
 
 .topic {
     font-weight: bold;
+}
+
+.panel-container-vertical {
+    height: calc(100% - 78px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel-container-horizontal {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+.panel-left {
+    flex: 0 0 auto;
+    height: 100%;
+    width: calc(50% - 6px);
+    min-width: 12px;
+    max-width: calc(100% - 24px);
+}
+
+.panel-right {
+    height: 100%;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.panel-top {
+    flex: 0 0 auto;
+    min-height: 37px;
+    max-height: calc(100% - 77px);
+    height: 78px;
+    width: 100%;
+    white-space: nowrap;
+}
+
+.splitter-horizontal {
+    flex: 0 0 auto;
+    height: 38px;
+    background: url(./hgrip.png) center center no-repeat;
+    cursor: row-resize;
+}
+
+
+.splitter-vertical {
+    flex: 0 0 auto;
+    width: 12px;
+    background: url(./vgrip.png) center center no-repeat;
+    cursor: col-resize;
+}
+
+
+.panel-bottom {
+    position: relative;
+    flex: 1 1 auto;
 }

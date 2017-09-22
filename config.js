@@ -2,9 +2,9 @@ const config = require('yargs')
     .usage('Usage: $0 [options]')
     .describe('v', 'possible values: "error", "warn", "info", "debug"')
     .describe('n', 'instance name. used as mqtt client id and as prefix for connected topic')
-    .describe('u', 'mqtt broker url. See https://github.com/mqttjs/MQTT.js#connect-using-a-url')
-    .describe('a', 'web server password for user admin')
+    .describe('u', 'mqtt broker url.')
     .describe('p', 'web server port')
+    .describe('i', 'web server interface')
     .describe('w', 'diable web server')
     .describe('h', 'show help')
     .alias({
@@ -12,16 +12,16 @@ const config = require('yargs')
         n: 'name',
         u: 'url',
         v: 'verbosity',
-        a: 'web-password',
+        i: 'web-interface',
         w: 'web-disable',
         p: 'web-port'
     })
     .default({
         u: 'mqtt://127.0.0.1',
+        i: '0.0.0.0',
         n: 'meta',
         v: 'info',
-        a: 'admin',
-        p: 8089
+        p: 8092
     })
     .version()
     .help('help')

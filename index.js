@@ -1,25 +1,26 @@
 #!/usr/bin/env node
 
 const path = require('path');
+const http = require('http');
+const express = require('express');
+
+const app = express();
+
+const server = http.Server(app); // eslint-disable-line new-cap
+const io = require('socket.io')(server);
+
 const log = require('yalm');
 const Mqtt = require('mqtt');
 const mw = require('mqtt-wildcard');
-const express = require('express');
-const bodyParser = require('body-parser');
-const basicAuth = require('express-basic-auth');
 const config = require('./config.js');
 const pkg = require('./package.json');
-const Api = require('./lib/api.js');
-
-const app = express();
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
-
-const api = new Api(config);
-
-let mqttConnected = false;
+const Core = require('./lib/core.js');
 
 log.setLevel(config.verbosity);
+
+const core = new Core(config, log);
+
+let mqttConnected = false;
 
 log.info(pkg.name + ' ' + pkg.version + ' starting');
 log.info('mqtt trying to connect', config.url);
@@ -32,13 +33,15 @@ mqtt.on('connect', () => {
     log.info('mqtt connected', config.url);
     mqtt.publish(config.name + '/connected', '1', {retain: true});
 
-    log.info('mqtt subscribe', config.name + '/set/#');
+    log.debug('mqtt subscribe', config.name + '/set/#');
     mqtt.subscribe(config.name + '/set/#');
-    log.info('mqtt subscribe', config.name + '/del/#');
+    log.debug('mqtt subscribe', config.name + '/del/#');
     mqtt.subscribe(config.name + '/del/#');
-    log.info('mqtt subscribe', config.name + '/extend/#');
+    log.debug('mqtt subscribe', config.name + '/extend/#');
     mqtt.subscribe(config.name + '/extend/#');
-    log.info('mqtt subscribe', config.name + '/query/#');
+    log.debug('mqtt subscribe', config.name + '/prop/#');
+    mqtt.subscribe(config.name + '/prop/#');
+    log.debug('mqtt subscribe', config.name + '/query/#');
     mqtt.subscribe(config.name + '/query/#');
 });
 
@@ -77,6 +80,7 @@ mqtt.on('message', (topic, payload) => {
         case 'set':
         case 'extend':
         case 'query':
+        case 'prop':
             let data;
             if (payload === '') {
                 data = payload;
@@ -89,14 +93,14 @@ mqtt.on('message', (topic, payload) => {
                 }
             }
             try {
-                api[cmd](id, data);
+                core[cmd](id, data);
             } catch (err) {
                 log.error('error in mqtt message handler', err.message);
             }
 
             break;
         case 'del':
-            api.del(id);
+            core.del(id);
             break;
 
         default:
@@ -104,51 +108,42 @@ mqtt.on('message', (topic, payload) => {
     }
 });
 
-api.on('ready', () => {
-    log.info('publishing all objects');
-    Object.keys(api.db).forEach(id => {
-        mqtt.publish(config.name + '/status/' + id, JSON.stringify(api.db[id]), {retain: true});
+core.on('ready', () => {
+    const oIds = Object.keys(core.db);
+    oIds.forEach(id => {
+        mqtt.publish(config.name + '/status/' + id, JSON.stringify(core.db[id]), {retain: true});
     });
-    mqtt.publish(config.name + '/rev', String(api.rev), {retain: true});
-    log.info('creating views');
-    Object.keys(api.views).forEach(id => {
-        api.query(id, {condition: api.views[id].condition, filter: api.views[id].filter}, true);
-    });
+    if (oIds.length > 0) {
+        log.info('published ' + oIds.length + ' objects');
+    }
+    mqtt.publish(config.name + '/rev', String(core.rev), {retain: true});
     mqtt.publish(config.name + '/connected', '2', {retain: true});
 });
 
-api.on('update', (id, data) => {
-    log.debug('update', id);
+core.on('update', (id, data) => {
+    log.debug('object', id, 'rev', data.rev);
     mqtt.publish(config.name + '/status/' + id, JSON.stringify(data), {retain: true});
-    mqtt.publish(config.name + '/rev', String(api.rev), {retain: true});
+    mqtt.publish(config.name + '/rev', String(core.rev), {retain: true});
 });
 
-api.on('view', (id, data) => {
+core.on('view', (id, data) => {
     io.emit('updateView', id);
     if (data && data.error) {
         log.error('view', id, ':', data);
     } else {
-        log.debug('view', id, data.length);
+        log.debug('view', id, 'rev', core.views[id] && core.views[id]._rev);
     }
     const payload = data ? JSON.stringify(data) : '';
     mqtt.publish(config.name + '/view/' + id, payload, {retain: true});
 });
 
-api.on('error', err => {
+core.on('error', err => {
     log.error(err);
 });
 
 if (!config.webDisable) {
-    server.listen(config.webPort);
-    log.info('http server listening on port', config.webPort);
-
-    /*
-    app.use(basicAuth({
-        users: {admin: config.webPassword},
-        challenge: true,
-        realm: 'mqtt-meta ui'
-    }));
-    */
+    server.listen(config.webPort, config.webInterface);
+    log.info('http server listening on ' + config.webInterface + ':' + config.webPort);
 
     app.get('/', (req, res) => {
         res.redirect(301, '/ui');
@@ -157,81 +152,37 @@ if (!config.webDisable) {
     app.use('/node_modules', express.static(path.join(__dirname, '/node_modules')));
 
     io.on('connection', socket => {
-        socket.emit('objectIds', Object.keys(api.db).sort());
-        socket.emit('viewIds', Object.keys(api.views).sort());
+        socket.emit('objectIds', Object.keys(core.db).sort());
+        socket.emit('viewIds', Object.keys(core.views).sort());
 
         socket.on('getObject', (id, cb) => {
-            cb(api.db[id]);
+            cb(core.db[id]);
         });
 
         socket.on('getView', (id, cb) => {
-            cb(api.views[id]);
+            cb({id, query: core.queries[id], view: core.views[id]});
         });
 
         socket.on('set', (id, data, cb) => {
-            if (data._rev === null || data._rev === api.db[id]._rev) {
-                api.set(id, data);
-                socket.emit('objectIds', Object.keys(api.db).sort());
+            if (data._rev === null || !core.db[id] || data._rev === core.db[id]._rev) {
+                core.set(id, data);
+                socket.emit('objectIds', Object.keys(core.db).sort());
                 cb('ok');
             } else {
-                cb('rev mismatch ' + api.db[id]._rev);
+                cb('rev mismatch ' + core.db[id]._rev);
             }
         });
 
         socket.on('del', (id, cb) => {
-            api.del(id);
+            core.del(id);
             cb('ok');
-            socket.emit('objectIds', Object.keys(api.db).sort());
+            socket.emit('objectIds', Object.keys(core.db).sort());
         });
 
         socket.on('query', (id, payload, cb) => {
-            api.query(id, payload);
+            core.query(id, payload);
             cb('ok');
-            socket.emit('viewIds', Object.keys(api.views).sort());
+            socket.emit('viewIds', Object.keys(core.views).sort());
         });
     });
-
-    /*
-    app.get('/ids', (req, res) => {
-        res.end(JSON.stringify(Object.keys(api.db).sort()));
-    });
-
-    app.get('/views', (req, res) => {
-        res.end(JSON.stringify(Object.keys(api.views).sort()));
-    });
-
-    app.get('/view', (req, res) => {
-        if (api.views[req.query.id]) {
-            res.end(JSON.stringify(api.views[req.query.id]));
-        } else {
-            res.end('');
-        }
-    });
-
-    app.get('/object', (req, res) => {
-        if (api.db[req.query.id]) {
-            res.end(JSON.stringify(api.db[req.query.id]));
-        } else {
-            res.end('');
-        }
-    });
-
-    app.get('/delete', (req, res) => {
-        res.end(api.del(req.query.id));
-    });
-
-    app.post('/object', bodyParser.json(), (req, res) => {
-        if (req.body.obj._rev === null || req.body.obj._rev === api.db[req.body.id]._rev) {
-            api.set(req.body.id, req.body.obj);
-            res.end('ok');
-        } else {
-            res.end('rev mismatch ' + api.db[req.body.id]._rev);
-        }
-    });
-    app.post('/view', bodyParser.json(), (req, res) => {
-
-        api.query(req.body.id, {condition: req.body.condition, filter: req.body.filter});
-        res.end('ok');
-    });
-    */
 }
