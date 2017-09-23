@@ -68,7 +68,7 @@ that is described by the document as id.
 To create or overwrite an Object with the id `hue/light/livingroom` you have to publish on the topic 
 `meta/set/hue/light/livingroom`. The payload has to be a JSON object, e.g. 
 `{"type": "light", "name": "hue light livingroom"}`. As soon as the document was created the document itself is 
-published retained on the topic `meta/status/hue/lights/livingroom`.
+published retained on the topic `meta/doc/hue/lights/livingroom`.
 
 
 ### Deletion of objects
@@ -78,13 +78,13 @@ To delete the object from the previous example just publish on `meta/del/hue/lig
 
 ### Views
 
-You can create views that publish an array of objects that match certain criteria by publishing a `map` function, an 
-optional `reduce` function and an optional `filter` to the `meta/query/<view-id>` topic. The map and reduce functions
-can be any valid  Javascript code, if you want to add something to the view you just have to return it. In the map 
-function `this` refers to a document, the function is then applied to all documents to compose the view.
+You can create _views_ that publish an array of objects that match certain criteria by publishing a _map_ function, an 
+optional _reduce_ function and an optional _filter_ to the `meta/query/<view-id>` topic. The map and reduce functions
+can be any valid Javascript code, if you want to add something to the view you just have to emit it. In the map 
+function `this` refers to the document, the function is then applied to all documents to compose the view. After the
+_map_ function completed the optional _reduce_ function is called and can work on the result.
 
-This is loosely inspired by CouchDB and MapReduce, but this is _not_ a _"real"_ MapReduce implementation, the map 
-function is just called for every object, the reduce function can then work on the result array of the map function.
+This is loosely inspired by CouchDB and MapReduce, but this is _not_ a _"real"_ MapReduce implementation.
 
 Example: Publish the payload `{"map": "if (this.type === 'light') emit(this._id)"}` on the topic 
 `meta/query/lights` to create a view "lights" that contains the ids of all objects that have a `type` property with the 
@@ -106,12 +106,12 @@ ids to an mqtt-style wildcard. Example payload:
 `{"filter": "hue/lights/#", "map": "if (this.type === 'color light') return this._id"}`
 
 The views are composed in separate worker processes, _mqtt-meta_ will spawn as many workers as CPU cores are available.
-The map scripts are executed in a minimal sandbox, so you don't have access to Node.js globals like e.g. `console` 
-or `require`. The documents in the workers are frozen, so no change on the database contents is possible by the map and
-reduce scripts.
+The map and reduce scripts are executed in a minimal sandbox, so you don't have access to Node.js globals like e.g. 
+`console` or `require`. The documents in the workers are frozen, so no change on the database contents is possible by 
+the map and reduce scripts.
 
-**See the [Wiki](https://github.com/hobbyquaker/mqtt-meta/wiki/Views)** for more examples on creating views with the 
-Web UI.
+
+**See the [Wiki](https://github.com/hobbyquaker/mqtt-meta/wiki/Views) for more view examples**
 
 
 ### Internal properties
@@ -120,24 +120,24 @@ These properties are set on all objects by _mqtt-meta_, they can't be changed or
 
 #### `_id`
 
-The objects id.
+A documents id.
 
 #### `_rev`
 
-An objects revision. Just a counter that gets incremented on every change of the object.
+A documents revision. Just a counter that gets incremented on every change of the object.
 
 
 ### Topics on which _mqtt-meta_ publishes
 
 #### `meta/connected`
 
-Publishes `1` when _mqtt-meta_ is started and publishes `2` when all objects are published.
+Publishes `1` when _mqtt-meta_ is started and publishes `2` when all documents are published.
 
 #### `meta/rev`
 
 Publishes the database revision number.
 
-#### `meta/status/<id>`
+#### `meta/doc/<id>`
 
 All documents are published retained on these topics.
 
