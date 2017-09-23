@@ -111,7 +111,7 @@ mqtt.on('message', (topic, payload) => {
 core.on('ready', () => {
     const oIds = Object.keys(core.db);
     oIds.forEach(id => {
-        mqtt.publish(config.name + '/status/' + id, JSON.stringify(core.db[id]), {retain: true});
+        mqtt.publish(config.name + '/doc/' + id, JSON.stringify(core.db[id]), {retain: true});
     });
     if (oIds.length > 0) {
         log.info('published ' + oIds.length + ' objects');
@@ -122,7 +122,7 @@ core.on('ready', () => {
 
 core.on('update', (id, data) => {
     log.debug('object', id, 'rev', data.rev);
-    mqtt.publish(config.name + '/status/' + id, JSON.stringify(data), {retain: true});
+    mqtt.publish(config.name + '/doc/' + id, JSON.stringify(data), {retain: true});
     mqtt.publish(config.name + '/rev', String(core.rev), {retain: true});
 });
 
