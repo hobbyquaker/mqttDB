@@ -18,6 +18,7 @@
   "author": "Sebastian Raff <hq@ccu.io> https://github.com/hobbyquaker",
   "license": "MIT",
   "dependencies": {
+    "async": "^2.5.0",
     "bootstrap": "^3.3.7",
     "bootstrap-3-typeahead": "^4.0.2",
     "codemirror": "^5.29.0",

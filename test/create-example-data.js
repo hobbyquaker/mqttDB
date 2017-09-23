@@ -1,3 +1,4 @@
+const async = require('async');
 const Mqtt = require('mqtt');
 
 const mqtt = Mqtt.connect('mqtt://127.0.0.1');
@@ -200,8 +201,26 @@ const objects = [
 
 ];
 
+const queue = [];
 let count = 0;
 objects.forEach(obj => {
-    mqtt.publish('meta/set/' + obj.type + '/' + (count++), JSON.stringify(obj));
+    const id = 'test/' + ('0000' + (count++)).slice(-5);
+    queue.push({id, payload: JSON.stringify(obj)});
+
 });
 
+function publish({id, payload}, callback) {
+    mqtt.publish('meta/set/' + id, payload, {qos: 2}, err => {
+        if (err) {
+            console.error('error', id, err);
+        } else {
+            console.log('published', id);
+        }
+        callback();
+    });
+}
+
+async.mapSeries(queue, publish, () => {
+    console.log('done');
+    mqtt.end();
+});
