@@ -6,16 +6,16 @@
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![License][mit-badge]][mit-url]
 
-> This is kind of a NoSQL Database, to be precise: a JSON Document Store with MQTT interface implemented in Node.js. 
-(Yeah, Buzzword Bingo! 🤠)
+> This is a NoSQL Database, to be precise: a JSON Document Store with MQTT interface, CouchDB/MapReduce inspired Views,
+implemented in Node.js. (Yeah, Buzzword Bingo! 🤠)
 
 It's intended to be used as a database for storing metadata for systems that use MQTT as message bus, I'm using it in 
 conjunction with [mqtt-smarthome](https://github.com/mqtt-smarthome/mqtt-smarthome), but I think it could be useful in
 other MQTT based environments also.
 
 You can create/modify/delete documents by publishing JSON payload to MQTT and receive document changes by simply 
-subscribing to certain topics. You can create views by defining a map function in javascript and filter documents with
-MQTT wildcards.
+subscribing to certain topics. You can create views by defining map and reduce functions in javascript and filter 
+documents with MQTT wildcards.
 
 
 ## Install
