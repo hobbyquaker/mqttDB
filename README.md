@@ -183,8 +183,9 @@ Pull Requests Welcome! 😀
 
 ## Disclaimer
 
-I'm not a database expert nor do I think that _mqttDB_ as of today scales very well. For my usecase it works with 
-sufficient performance, your mileage may vary. 
+I'm not a database expert nor do I think that _mqttDB_ as of today scales very well. _mqttDB_ handles memory quite
+inefficient, the whole database is kept in memory in the core and all the worker processes. For my use case - with a few
+thousand documents and a few dozen views - it works with sufficient performance, your mileage may vary. 
 
 
 ## License
