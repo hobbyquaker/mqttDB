@@ -206,7 +206,6 @@ let count = 0;
 objects.forEach(obj => {
     const id = 'test/' + ('0000' + (count++)).slice(-5);
     queue.push({id, payload: JSON.stringify(obj)});
-
 });
 
 function publish({id, payload}, callback) {
