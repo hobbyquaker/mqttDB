@@ -19,7 +19,7 @@ const config = require('yargs')
     .default({
         u: 'mqtt://127.0.0.1',
         i: '0.0.0.0',
-        n: 'meta',
+        n: 'db',
         v: 'info',
         p: 8092
     })

@@ -99,9 +99,6 @@ mqtt.on('message', (topic, payload) => {
             }
 
             break;
-        case 'del':
-            core.del(id);
-            break;
 
         default:
             log.error('unknown cmd', cmd);

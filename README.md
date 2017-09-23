@@ -1,8 +1,8 @@
-# mqtt-meta
+# mqttDB
 
-[![NPM version](https://badge.fury.io/js/mqtt-meta.svg)](http://badge.fury.io/js/mqtt-meta)
-[![Dependency Status](https://img.shields.io/gemnasium/hobbyquaker/mqtt-meta.svg?maxAge=2592000)](https://gemnasium.com/github.com/hobbyquaker/mqtt-meta)
-[![Build Status](https://travis-ci.org/hobbyquaker/mqtt-meta.svg?branch=master)](https://travis-ci.org/hobbyquaker/mqtt-meta)
+[![NPM version](https://badge.fury.io/js/mqttDB.svg)](http://badge.fury.io/js/mqttDB)
+[![Dependency Status](https://img.shields.io/gemnasium/hobbyquaker/mqttDB.svg?maxAge=2592000)](https://gemnasium.com/github.com/hobbyquaker/mqttDB)
+[![Build Status](https://travis-ci.org/hobbyquaker/mqttDB.svg?branch=master)](https://travis-ci.org/hobbyquaker/mqttDB)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![License][mit-badge]][mit-url]
 
@@ -20,7 +20,7 @@ documents with MQTT wildcards.
 
 ## Install
 
-`$ npm install -g mqtt-meta`
+`$ npm install -g mqttdb`
 
 
 ## Usage
@@ -28,7 +28,7 @@ documents with MQTT wildcards.
 ### Command Line Parameters
 
 ```
-Usage: mqtt-meta [options]
+Usage: mqttdb [options]
 
 Options:
   -v, --verbosity      possible values: "error", "warn", "info", "debug"
@@ -47,39 +47,39 @@ You can also connect to the MQTT Broker via Websocket and use TLS, also username
 `--url` parameter. E.g `mqtts://user:password@192.168.2.200:1884` for a MQTT over TLS connection. For Websockets use
 `ws://` respectively `wss://` as protocol.
 
-To run _mqtt-meta_ in background and start it on system boot I suggest to use the process manager 
+To run _mqttDB_ in background and start it on system boot I suggest to use the process manager 
 [PM2](https://github.com/Unitech/pm2).
 
 
 ### Web UI
 
-_mqtt-meta_ offers a simple ui, you can reach it on `http://<hostname>:8092`.
+_mqttDB_ offers a simple ui, you can reach it on `http://<hostname>:8092`.
 
 
 ### Ids
 
 The id of a document can be any string, slashes are allowed - only the mqtt wildcards `#` and `+` may not occur in the 
-id. As the intended use of _mqtt-meta_ is to manage metadata that belongs to MQTT topics I suggest to just use the topic
+id. As the intended use of _mqttDB_ is to manage metadata that belongs to MQTT topics I suggest to just use the topic
 that is described by the document as id.
 
 
 ### Create/overwrite an object
 
 To create or overwrite an Object with the id `hue/light/livingroom` you have to publish on the topic 
-`meta/set/hue/light/livingroom`. The payload has to be a JSON object, e.g. 
+`db/set/hue/light/livingroom`. The payload has to be a JSON object, e.g. 
 `{"type": "light", "name": "hue light livingroom"}`. As soon as the document was created the document itself is 
-published retained on the topic `meta/doc/hue/lights/livingroom`.
+published retained on the topic `db/doc/hue/lights/livingroom`.
 
 
 ### Deletion of objects
 
-To delete the object from the previous example just publish on `meta/del/hue/lights/livingroom`. Payload is irrelevant.
+To delete the object from the previous example just publish an empty string payload on `db/set/hue/lights/livingroom`. 
 
 
 ### Views
 
 You can create _views_ that publish an array of objects that match certain criteria by publishing a _map_ function, an 
-optional _reduce_ function and an optional _filter_ to the `meta/query/<view-id>` topic. The map and reduce functions
+optional _reduce_ function and an optional _filter_ to the `db/query/<view-id>` topic. The map and reduce functions
 can be any valid Javascript code, if you want to add something to the view you just have to emit it. In the map 
 function `this` refers to the document, the function is then applied to all documents to compose the view. After the
 _map_ function completed the optional _reduce_ function is called and can work on the result.
@@ -87,9 +87,9 @@ _map_ function completed the optional _reduce_ function is called and can work o
 This is loosely inspired by CouchDB and MapReduce, but this is _not_ a _"real"_ MapReduce implementation.
 
 Example: Publish the payload `{"map": "if (this.type === 'light') emit(this._id)"}` on the topic 
-`meta/query/lights` to create a view "lights" that contains the ids of all objects that have a `type` property with the 
+`db/query/lights` to create a view "lights" that contains the ids of all objects that have a `type` property with the 
 value `light`. 
-As soon as the view is created _mqtt-meta_ publishes on `meta/view/lights`, with the above example this would result in
+As soon as the view is created _mqttDB_ publishes on `db/view/lights`, with the above example this would result in
 following payload:
 ```json
 {
@@ -99,24 +99,24 @@ following payload:
 }
 ```
 If any change on the database happens all views are re-composed, so if you add another object with `"type": "light"`
-_mqtt-meta_ will immediately re-compose all views and then publish the updated views with the new member. 
+_mqttDB_ will immediately re-compose all views and then publish the updated views with the new member. 
 
 Besides the possibility to select objects with a map script you can also use the property `filter` to match documents
 ids to an mqtt-style wildcard. Example payload: 
 `{"filter": "hue/lights/#", "map": "if (this.type === 'color light') return this._id"}`
 
-The views are composed in separate worker processes, _mqtt-meta_ will spawn as many workers as CPU cores are available.
+The views are composed in separate worker processes, _mqttDB_ will spawn as many workers as CPU cores are available.
 The map and reduce scripts are executed in a minimal sandbox, so you don't have access to Node.js globals like e.g. 
 `console` or `require`. The documents in the workers are frozen, so no change on the database contents is possible by 
 the map and reduce scripts.
 
 
-**See the [Wiki](https://github.com/hobbyquaker/mqtt-meta/wiki/Views) for more view examples**
+**See the [Wiki](https://github.com/hobbyquaker/mqttDB/wiki/Views) for more view examples**
 
 
 ### Internal properties
 
-These properties are set on all objects by _mqtt-meta_, they can't be changed or deleted.
+These properties are set on all objects by _mqttDB_, they can't be changed or deleted.
 
 #### `_id`
 
@@ -127,39 +127,39 @@ A documents id.
 A documents revision. Just a counter that gets incremented on every change of the object.
 
 
-### Topics on which _mqtt-meta_ publishes
+### Topics on which _mqttDB_ publishes
 
-#### `meta/connected`
+#### `db/connected`
 
-Publishes `1` when _mqtt-meta_ is started and publishes `2` when all documents are published.
+Publishes `1` when _mqttDB_ is started and publishes `2` when all documents are published.
 
-#### `meta/rev`
+#### `db/rev`
 
 Publishes the database revision number.
 
-#### `meta/doc/<id>`
+#### `db/doc/<id>`
 
 All documents are published retained on these topics.
 
-#### `meta/view/<id>`
+#### `db/view/<id>`
 
 All views are published retained on these topics.
 
-### Topics subscribed by _mqtt-meta_
+### Topics subscribed by _mqttDB_
 
-#### `meta/set/<id>`
+#### `db/set/<id>`
 
 Create or overwrite a document.
 
-#### `meta/extend/<id>`
+#### `db/extend/<id>`
 
 Extend a document (overwrite only given properties of the document).
 
-#### `meta/del/<id>`
+#### `db/del/<id>`
 
 Delete a document. Payload is irrelevant.
 
-#### `meta/prop/<id>`
+#### `db/prop/<id>`
 
 Set/create/delete document properties. Examples Payloads:
 
@@ -171,7 +171,7 @@ You can use dot-Notation for `prop` to access nested properties.
 
 In contrast to the `set` method `create` won't overwrite existing properties.
 
-#### `meta/query/<id>`
+#### `db/query/<id>`
 
 Create, overwrite or delete a view. Use an empty string payload to delete a view.
 
@@ -183,7 +183,7 @@ Pull Requests Welcome! 😀
 
 ## Disclaimer
 
-I'm not a database expert nor do I think that _mqtt-meta_ as of today scales very well. For my usecase it works with 
+I'm not a database expert nor do I think that _mqttDB_ as of today scales very well. For my usecase it works with 
 sufficient performance, your mileage may vary. 
 
 
