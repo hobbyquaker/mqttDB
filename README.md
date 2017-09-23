@@ -63,7 +63,7 @@ id. As the intended use of _mqttDB_ is to manage metadata that belongs to MQTT t
 that is described by the document as id.
 
 
-### Create/overwrite an object
+### Create/overwrite a document
 
 To create or overwrite an Object with the id `hue/light/livingroom` you have to publish on the topic 
 `db/set/hue/light/livingroom`. The payload has to be a JSON object, e.g. 
@@ -71,9 +71,9 @@ To create or overwrite an Object with the id `hue/light/livingroom` you have to 
 published retained on the topic `db/doc/hue/lights/livingroom`.
 
 
-### Deletion of objects
+### Deletion of docuemnts
 
-To delete the object from the previous example just publish an empty string payload on `db/set/hue/lights/livingroom`. 
+To delete the document from the previous example just publish an empty string payload on `db/set/hue/lights/livingroom`. 
 
 
 ### Views
@@ -98,10 +98,10 @@ following payload:
   "_rev": 0
 }
 ```
-If any change on the database happens all views are re-composed, so if you add another object with `"type": "light"`
+If any change on the database happens all views are re-composed, so if you add another document with `"type": "light"`
 _mqttDB_ will immediately re-compose all views and then publish the updated views with the new member. 
 
-Besides the possibility to select objects with a map script you can also use the property `filter` to match documents
+Besides the possibility to select documents with a map script you can also use the property `filter` to match documents
 ids to an mqtt-style wildcard. Example payload: 
 `{"filter": "hue/lights/#", "map": "if (this.type === 'color light') return this._id"}`
 
@@ -116,7 +116,7 @@ the map and reduce scripts.
 
 ### Internal properties
 
-These properties are set on all objects by _mqttDB_, they can't be changed or deleted.
+These properties are set on all documents by _mqttDB_, they can't be changed or deleted.
 
 #### `_id`
 
@@ -124,7 +124,7 @@ A documents id.
 
 #### `_rev`
 
-A documents revision. Just a counter that gets incremented on every change of the object.
+A documents revision. Just a counter that gets incremented on every change of the document.
 
 
 ### Topics on which _mqttDB_ publishes
