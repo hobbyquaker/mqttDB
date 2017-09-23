@@ -34,7 +34,7 @@ Options:
   -v, --verbosity      possible values: "error", "warn", "info", "debug"
                                                                [default: "info"]
   -n, --name           instance name. used as mqtt client id and as prefix for
-                       connected topic                         [default: "meta"]
+                       connected topic                           [default: "db"]
   -u, --url            mqtt broker url.            [default: "mqtt://127.0.0.1"]
   -p, --web-port       web server port                           [default: 8092]
   -i, --web-interface  web server interface                 [default: "0.0.0.0"]
