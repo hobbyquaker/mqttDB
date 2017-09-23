@@ -121,8 +121,9 @@ core.on('ready', () => {
 });
 
 core.on('update', (id, data) => {
-    log.debug('object', id, 'rev', data.rev);
+    log.debug('mqtt >', id, 'rev', data.rev);
     mqtt.publish(config.name + '/doc/' + id, JSON.stringify(data), {retain: true});
+    log.debug('mqtt > rev', core.rev);
     mqtt.publish(config.name + '/rev', String(core.rev), {retain: true});
 });
 
