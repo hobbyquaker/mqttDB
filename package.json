@@ -13,7 +13,7 @@
   "engines": {
     "node": ">=6.0.0"
   },
-  "repository": "https://github.com/hobbyquaker/mqttdb",
+  "repository": "https://github.com/hobbyquaker/mqttDB",
   "engineStrict": true,
   "author": "Sebastian Raff <hq@ccu.io> https://github.com/hobbyquaker",
   "license": "MIT",
