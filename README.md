@@ -149,15 +149,11 @@ All views are published retained on these topics.
 
 #### `db/set/<id>`
 
-Create or overwrite a document.
+Create, overwrite or delete a document. Payload has to be a JSON object, for deletion just publish an empty string.
 
 #### `db/extend/<id>`
 
 Extend a document (overwrite only given properties of the document).
-
-#### `db/del/<id>`
-
-Delete a document. Payload is irrelevant.
 
 #### `db/prop/<id>`
 

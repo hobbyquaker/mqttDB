@@ -35,8 +35,6 @@ mqtt.on('connect', () => {
 
     log.debug('mqtt subscribe', config.name + '/set/#');
     mqtt.subscribe(config.name + '/set/#');
-    log.debug('mqtt subscribe', config.name + '/del/#');
-    mqtt.subscribe(config.name + '/del/#');
     log.debug('mqtt subscribe', config.name + '/extend/#');
     mqtt.subscribe(config.name + '/extend/#');
     log.debug('mqtt subscribe', config.name + '/prop/#');
