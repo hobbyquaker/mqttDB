@@ -71,7 +71,7 @@ To create or overwrite an Object with the id `hue/light/livingroom` you have to 
 published retained on the topic `db/doc/hue/lights/livingroom`.
 
 
-### Deletion of docuemnts
+### Deletion of documents
 
 To delete the document from the previous example just publish an empty string payload on `db/set/hue/lights/livingroom`. 
 
