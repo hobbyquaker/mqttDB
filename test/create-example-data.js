@@ -19,9 +19,9 @@ const objects = [
     {type: 'Simpson', name: 'Bart'},
     {type: 'Simpson', name: 'Maggie'},
 
-    {type: 'Moon', name: 'Phobos', planet: 'Mars'},
-    {type: 'Moon', name: 'Deimos', planet: 'Mars'},
-    {type: 'Moon', name: 'Moon', planet: 'Earth'},
+    {type: 'Moon', name: 'Phobos', planet: 'Mars', diameter: 26},
+    {type: 'Moon', name: 'Deimos', planet: 'Mars', diameter: 15},
+    {type: 'Moon', name: 'Moon', planet: 'Earth', diameter: 3476},
 
     {type: 'Moon', order: 'I', name: 'Io', desc: '', diameter: 3643, year: 1610, planet: 'Jupiter'},
     {type: 'Moon', order: 'II', name: 'Europa', desc: '', diameter: 3122, year: 1610, planet: 'Jupiter'},
