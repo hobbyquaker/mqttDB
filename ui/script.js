@@ -213,22 +213,6 @@ function getView(id) {
                 obj._rev = data.view._rev;
             }
 
-            /* TODO this is really dirty... find a better way to create object links!
-            const linkMap = {};
-            if (obj.result && obj.result.length > 0) {
-                obj.result.forEach(r => {
-                    if (typeof r === 'string' && objectIds.indexOf(r) !== -1) {
-                        linkMap[JSON.stringify($('<div>').text(r).html())] = '<a class="object-link" data-object=' + JSON.stringify(r) + '>' + $('<div>').text(r).html() + '</a>';
-                    }
-                });
-            }
-
-            let str = $('<div>').text(stringify(obj)).html();
-            Object.keys(linkMap).forEach(l => {
-                str = str.replace(l, linkMap[l]);
-            });
-            */
-
             cmResult.setValue(stringify(obj));
             $('.object-link').click(function () {
                 console.log($(this).data('object'));
