@@ -216,7 +216,7 @@ function publish({id, payload}, callback) {
         } else {
             console.log('published', id);
         }
-        callback();
+        setTimeout(callback, 20);
     });
 }
 
