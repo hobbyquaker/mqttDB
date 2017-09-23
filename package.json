@@ -1,5 +1,5 @@
 {
-  "name": "mqttDB",
+  "name": "mqttdb",
   "version": "0.7.0",
   "description": "JSON Store with MQTT Interface",
   "main": "index.js",
