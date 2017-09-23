@@ -86,7 +86,7 @@ socket.on('objectIds', data => {
     }
 
     $inputObjectId.typeahead({
-        source: objectIds,
+        source: objectIds.sort(),
         minLength: 0,
         items: 12,
         afterSelect: () => {
@@ -120,7 +120,7 @@ socket.on('viewIds', viewIds => {
     }
 
     $inputViewId.typeahead({
-        source: viewIds,
+        source: viewIds.sort(),
         minLength: 0,
         items: 12,
         afterSelect: () => {

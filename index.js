@@ -125,6 +125,7 @@ core.on('update', (id, data) => {
     mqtt.publish(config.name + '/doc/' + id, JSON.stringify(data), {retain: true});
     log.debug('mqtt > rev', core.rev);
     mqtt.publish(config.name + '/rev', String(core.rev), {retain: true});
+    io.emit('objectIds', Object.keys(core.db));
 });
 
 core.on('view', (id, data) => {
@@ -136,6 +137,7 @@ core.on('view', (id, data) => {
     }
     const payload = data ? JSON.stringify(data) : '';
     mqtt.publish(config.name + '/view/' + id, payload, {retain: true});
+    io.emit('viewIds', Object.keys(core.views));
 });
 
 core.on('error', err => {
@@ -153,8 +155,8 @@ if (!config.webDisable) {
     app.use('/node_modules', express.static(path.join(__dirname, '/node_modules')));
 
     io.on('connection', socket => {
-        socket.emit('objectIds', Object.keys(core.db).sort());
-        socket.emit('viewIds', Object.keys(core.views).sort());
+        io.emit('objectIds', Object.keys(core.db));
+        io.emit('viewIds', Object.keys(core.views));
 
         socket.on('getObject', (id, cb) => {
             cb(core.db[id]);
