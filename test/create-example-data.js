@@ -209,7 +209,7 @@ objects.forEach(obj => {
 });
 
 function publish({id, payload}, callback) {
-    mqtt.publish('meta/set/' + id, payload, {qos: 2}, err => {
+    mqtt.publish('db/set/' + id, payload, {qos: 2}, err => {
         if (err) {
             console.error('error', id, err);
         } else {
