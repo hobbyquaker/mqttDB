@@ -1,4 +1,4 @@
-/* global subscribe, it */
+/* global describe, it, should */
 
 require('should');
 
@@ -65,6 +65,30 @@ function startDb() {
     });
 }
 
+const mqttSubscriptions = [];
+
+mqtt.on('message', (topic, payload) => {
+    payload = payload.toString();
+    console.log('mqtt <', topic);
+    mqttSubscriptions.forEach((sub, index) => {
+        if (sub.topic === topic) {
+            const callback = sub.callback;
+            if (sub.once) {
+                mqttSubscriptions.splice(index, 1);
+            }
+            if (payload !== '') {
+                payload = JSON.parse(payload)
+            }
+            callback(payload);
+        }
+    });
+});
+
+function mqttSubscribeOnce(topic, callback) {
+    mqttSubscriptions.push({topic, callback, once: true});
+    mqtt.subscribe(topic);
+}
+
 
 describe('start daemons', () => {
     it('mqttDB should start without error', function (done)  {
@@ -86,8 +110,67 @@ describe('start daemons', () => {
             done();
         });
     });
+    it('should complete init', function (done) {
+        this.timeout(20000);
+        procSubscribe(/init complete/, data => {
+            done();
+        });
+    });
+    it('should subscribe to set', function (done) {
+        procSubscribe(/mqtt subscribe db[0-9a-f]+\/set\/#/, () => {
+            done();
+        });
+    });
+    it('should subscribe to extend', function (done) {
+        procSubscribe(/mqtt subscribe db[0-9a-f]+\/extend\/#/, () => {
+            done();
+        });
+    });
+    it('should subscribe to prop', function (done) {
+        procSubscribe(/mqtt subscribe db[0-9a-f]+\/prop\/#/, () => {
+            done();
+        });
+    });
+    it('should subscribe to query', function (done) {
+        procSubscribe(/mqtt subscribe db[0-9a-f]+\/query\/#/, () => {
+            done();
+        });
+    });
 });
 
+describe('document test1', () => {
+    it('should create a document', function (done) {
+        this.timeout(20000);
+        const doc = {type: 'test'};
+        mqttSubscribeOnce(dbId + '/doc/test1', payload => {
+            should.deepEqual({type: 'test', _id: 'test1', _rev: 0}, payload);
+            done();
+        });
+        setTimeout(() => {
+            mqtt.publish(dbId + '/set/test1', JSON.stringify(doc));
+        }, 500);
+    });
+    it('should extend a document', function (done) {
+        this.timeout(20000);
+        mqttSubscribeOnce(dbId + '/doc/test1', payload => {
+            should.deepEqual({type: 'test', _id: 'test1', _rev: 1, muh: 'kuh'}, payload);
+            done();
+        });
+        setTimeout(() => {
+            mqtt.publish(dbId + '/extend/test1', JSON.stringify({muh: 'kuh'}));
+        }, 500);
+    });
+    it('should delete a document', function (done) {
+        this.timeout(20000);
+        mqttSubscribeOnce(dbId + '/doc/test1', payload => {
+            payload.should.equal('');
+            done();
+        });
+        setTimeout(() => {
+            mqtt.publish(dbId + '/set/test1', '');
+        }, 500);
+    });
+});
 
 
 
