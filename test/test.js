@@ -288,6 +288,28 @@ describe('view test1', () => {
     });
 });
 
+describe('view test2 script creation error', () => {
+    it('should publish an error', function (done) {
+        this.timeout(20000);
+        mqttSubscribeOnce(dbId + '/view/test2', payload => {
+            should.deepEqual({ _id: 'test2', _rev: -1, error: 'script creation: Unexpected identifier'}, payload);
+            done();
+        });
+        mqtt.publish(dbId + '/query/test2', JSON.stringify({map: 'ERROR (this.type === "muh") emit(this._id)'}));
+    });
+});
+
+describe('view test3 script execution error', () => {
+    it('should publish an error', function (done) {
+        this.timeout(20000);
+        mqttSubscribeOnce(dbId + '/view/test3', payload => {
+            should.deepEqual({ _id: 'test3', _rev: -1, error: 'script execution: Cannot read property \'type\' of undefined'}, payload);
+            done();
+        });
+        mqtt.publish(dbId + '/query/test3', JSON.stringify({map: 'if (this.doesNotExist.type === "muh") emit(this._id)'}));
+    });
+});
+
 describe('stop daemon', () => {
     it('should stop mqttDB', function (done) {
         this.timeout(20000);
