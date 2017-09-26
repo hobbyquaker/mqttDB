@@ -39,7 +39,8 @@ Options:
   -u, --url            mqtt broker url.            [default: "mqtt://127.0.0.1"]
   -p, --web-port       web server port                           [default: 8092]
   -i, --web-interface  web server interface                 [default: "0.0.0.0"]
-  -w, --web-disable    diable web server
+  -x, --web-disable    diable web server
+  -w, --workers        number of worker processes                   [default: 4]
   -h, --help           Show help                                       [boolean]
   --version            Show version number                             [boolean]
 ```
