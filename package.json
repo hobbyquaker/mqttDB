@@ -1,6 +1,6 @@
 {
   "name": "mqttdb",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "JSON Store with MQTT Interface",
   "main": "index.js",
   "preferGlobal": true,
@@ -8,7 +8,11 @@
     "mqttdb": "./index.js"
   },
   "scripts": {
-    "test": "camo-purge ; xo"
+    "test": "camo-purge ; xo && nyc mocha test/test.js && nyc report --reporter=text-lcov | coveralls --force",
+    "lint": "xo",
+    "lintfix": "xo --fix",
+    "testonly": "mocha test/test.js",
+    "testcov": "nyc mocha test/test.js"
   },
   "engines": {
     "node": ">=6.0.0"
@@ -37,9 +41,17 @@
   },
   "devDependencies": {
     "camo-purge": "latest",
+    "coveralls": "latest",
+    "mocha": "latest",
+    "nyc": "latest",
+    "should": "latest",
+    "stream-splitter": "latest",
     "xo": "latest"
   },
   "xo": {
-    "space": 4
+    "space": 4,
+    "ignore": [
+      "test/test.js"
+    ]
   }
 }
