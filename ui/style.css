@@ -165,6 +165,8 @@ html, body {
     height: 38px;
     background: url(./hgrip.png) center center no-repeat;
     cursor: row-resize;
+    margin-left: 160px;
+    margin-right: 160px;
 }
 
 
