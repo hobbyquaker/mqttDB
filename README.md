@@ -183,8 +183,9 @@ Pull Requests Welcome! 😀
 
 I'm not a database expert nor do I think that _mqttDB_ as of today scales very well. _mqttDB_ handles memory quite
 inefficient, the whole database is kept in memory in the core and all the worker processes. For my use case - with a few
-thousand documents and a couple of dozen views - it works with sufficient performance, your mileage may vary. 
-
+thousand documents and a couple of dozen views - it works with sufficient performance, your mileage may vary. You can
+adjust a compromise between memory usage and view composing performance by setting a lower/higher number of worker
+processes.
 
 ## License
 
