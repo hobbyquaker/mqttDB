@@ -34,7 +34,7 @@
     "mqtt": "^2.13.0",
     "mqtt-wildcard": "^3.0.9",
     "obj-ease": "^1.0.1",
-    "persist-json": "^1.0.1",
+    "persist-json": "^1.2.0",
     "socket.io": "^2.0.3",
     "yalm": "^4.1.0",
     "yargs": "^9.0.1"
