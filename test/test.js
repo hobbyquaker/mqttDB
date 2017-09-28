@@ -299,6 +299,36 @@ describe('view test1', () => {
         });
         mqtt.publish(dbId + '/query/test1', JSON.stringify({filter: '#', map: 'if (this.type === "foo") emit(this._id)', reduce: 'return result'}));
     });
+    it('should queue view execution', function (done) {
+        this.timeout(20000);
+        for (let i = 3; i < 50; i++) {
+            mqtt.publish(dbId + '/set/doc' + i, JSON.stringify({type: 'foo'}));
+        }
+        setTimeout(() => {
+            mqttSubscribeOnceRetain(dbId + '/view/test1', payload => {
+                delete payload._rev;
+                payload.should.deepEqual({ 
+                    _id: 'test1',
+                    result: [
+                        'doc2', 'doc3', 'doc4', 'doc5', 'doc6', 'doc7', 'doc8', 'doc9', 'doc10', 'doc11', 'doc12',
+                        'doc13', 'doc14', 'doc15', 'doc16', 'doc17', 'doc18', 'doc19', 'doc20', 'doc21', 'doc22',
+                        'doc23', 'doc24', 'doc25', 'doc26', 'doc27', 'doc28', 'doc29', 'doc30', 'doc31', 'doc32',
+                        'doc33', 'doc34', 'doc35', 'doc36', 'doc37', 'doc38', 'doc39', 'doc40', 'doc41', 'doc42',
+                        'doc43', 'doc44', 'doc45', 'doc46', 'doc47', 'doc48', 'doc49'
+                    ],
+                    length: 48
+                });
+
+                for (let i = 3; i < 50; i++) {
+                    mqtt.publish(dbId + '/set/doc' + i, '');
+                }
+                setTimeout(() => {
+                    done();
+                }, 5000);
+            });
+        }, 5000);
+
+    });
     it('should delete the view', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/view/test1', payload => {
