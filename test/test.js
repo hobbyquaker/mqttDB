@@ -427,6 +427,15 @@ describe('socket.io', () => {
             client.disconnect();
         });
     });
+    it('should respond with error on revision conflict', function (done) {
+        this.timeout(20000);
+        const client = io.connect('http://127.0.0.1:8092');
+        client.emit('set', 'doc3', {foo: 'bar', _rev: -1}, (data) => {
+            data.should.equal('rev mismatch 0');
+            client.disconnect();
+            done();
+        });
+    });
     it('should delete a document', function (done) {
         this.timeout(20000);
         const client = io.connect('http://127.0.0.1:8092');

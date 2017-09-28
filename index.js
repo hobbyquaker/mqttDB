@@ -138,10 +138,12 @@ core.on('view', (id, data) => {
     io.emit('viewIds', Object.keys(core.views));
 });
 
+/* istanbul ignore next */
 core.on('error', err => {
     log.error(err);
 });
 
+/* istanbul ignore else */
 if (!config.webDisable) {
     server.listen(config.webPort, config.webInterface);
     log.info('http server listening on ' + config.webInterface + ':' + config.webPort);
