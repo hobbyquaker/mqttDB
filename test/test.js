@@ -1,10 +1,14 @@
 /* global describe, it, should */
 
+const debug = false;
+
 require('should');
 
 const path = require('path');
 const cp = require('child_process');
 const streamSplitter = require('stream-splitter');
+const request = require('request');
+const io = require('socket.io-client');
 
 const Mqtt = require('mqtt');
 const mqtt = Mqtt.connect('mqtt://127.0.0.1');
@@ -56,11 +60,11 @@ function startDb() {
     procPipeErr = proc.stderr.pipe(streamSplitter('\n'));
     
     procPipeOut.on('token', data => {
-        console.log('db', data.toString());
+        if (debug) console.log('db', data.toString());
         matchSubscriptions(data.toString());
     });
     procPipeErr.on('token', data => {
-        console.log('db', data.toString());
+        if (debug) console.log('db', data.toString());
         matchSubscriptions(data.toString());
     });
 }
@@ -77,7 +81,7 @@ mqtt.on('message', (topic, payload, options) => {
             }
             if (sub.once) {
                 mqttSubscriptions.splice(index, 1);
-                console.log('mqtt unsubscribe', sub.topic);
+                if (debug) console.log('mqtt unsubscribe', sub.topic);
                 mqtt.unsubscribe(sub.topic);
             }
             if (payload !== '') {
@@ -90,13 +94,13 @@ mqtt.on('message', (topic, payload, options) => {
 
 function mqttSubscribeOnce(topic, callback) {
     mqttSubscriptions.push({topic, callback, once: true});
-    console.log('mqtt subscribe', topic);
+    if (debug) console.log('mqtt subscribe', topic);
     mqtt.subscribe(topic);
 }
 
 function mqttSubscribeOnceRetain(topic, callback) {
     mqttSubscriptions.push({topic, callback, once: true, retain: true});
-    console.log('mqtt subscribe', topic);
+    if (debug) console.log('mqtt subscribe', topic);
     mqtt.subscribe(topic);
 }
 
@@ -264,7 +268,6 @@ describe('view test1', () => {
         mqtt.publish(dbId + '/set/doc2', JSON.stringify({type: 'foo'}));
         setTimeout(() => {
             mqttSubscribeOnceRetain(dbId + '/view/test1', payload => {
-                console.log('!!!', payload);
                 should.deepEqual({ _id: 'test1', _rev: 1, result: [ 'doc1' ], length: 1 }, payload);
                 done();
             });
@@ -340,6 +343,99 @@ describe('restart daemon', () => {
         this.timeout(20000);
         procSubscribe(/published 2 objects/, data => {
             done();
+        });
+    });
+});
+
+describe('webserver', () => {
+    it('should response with http 200 on /', function (done) {
+        this.timeout(20000);
+        request('http://127.0.0.1:8092/', (err, res, body) => {
+            if (res.statusCode) {
+                done();
+            }
+        });
+    });
+});
+
+describe('socket.io', () => {
+    it('should connect', function (done) {
+        const client = io.connect('http://127.0.0.1:8092');
+        client.on('connect', () => {
+            done();
+            client.disconnect();
+        });
+    });
+    it('should receive objectIds on connect', function (done) {
+        const client = io.connect('http://127.0.0.1:8092');
+        client.on('objectIds', (data) => {
+            client.disconnect();
+            data.should.deepEqual(['doc1', 'doc2']);
+            done();
+        });
+    });
+    it('should receive viewIds on connect', function (done) {
+        const client = io.connect('http://127.0.0.1:8092');
+        client.on('viewIds', (data) => {
+            client.disconnect();
+            data.should.deepEqual(['test2', 'test3']);
+            done();
+        });
+    });
+    it('should get an object', function (done) {
+        const client = io.connect('http://127.0.0.1:8092');
+        client.emit('getObject', 'doc1', data => {
+            client.disconnect();
+            data.should.deepEqual({type: 'muh', _id: 'doc1', _rev: 0});
+            done();
+        });
+    });
+    it('should create a view', function (done) {
+        this.timeout(20000);
+        const client = io.connect('http://127.0.0.1:8092');
+        mqttSubscribeOnce(dbId + '/view/test4', data => {
+            data.should.deepEqual({_id: 'test4', _rev: 0, result: [ 'doc1', 'doc2' ], length: 2});
+            done();
+        });
+        client.emit('query', 'test4', {map: 'emit(this._id)'}, () => {
+            client.disconnect();
+        });
+    });
+    it('should get a view', function (done) {
+        this.timeout(20000);
+        const client = io.connect('http://127.0.0.1:8092');
+        setTimeout(() => {
+            client.emit('getView', 'test4', data => {
+                data.should.deepEqual({
+                    id: 'test4',
+                    query: {map: 'emit(this._id)'},
+                    view: {_id: 'test4', _rev: 0, result: [ 'doc1', 'doc2' ], length: 2}
+                });
+                client.disconnect();
+                done();
+            });
+        }, 2000);
+    });
+    it('should create a document', function (done) {
+        this.timeout(20000);
+        const client = io.connect('http://127.0.0.1:8092');
+        mqttSubscribeOnce(dbId + '/doc/doc3', data => {
+            data.should.deepEqual({_id: 'doc3', _rev: 0, foo: 'bar'});
+            done();
+        });
+        client.emit('set', 'doc3', {foo: 'bar'}, () => {
+            client.disconnect();
+        });
+    });
+    it('should delete a document', function (done) {
+        this.timeout(20000);
+        const client = io.connect('http://127.0.0.1:8092');
+        mqttSubscribeOnce(dbId + '/doc/doc3', data => {
+            data.should.equal('');
+            done();
+        });
+        client.emit('del', 'doc3', () => {
+            client.disconnect();
         });
     });
 });

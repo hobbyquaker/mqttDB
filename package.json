@@ -44,7 +44,9 @@
     "coveralls": "latest",
     "mocha": "latest",
     "nyc": "latest",
+    "request": "latest",
     "should": "latest",
+    "socket.io-client": "^2.0.3",
     "stream-splitter": "latest",
     "xo": "latest"
   },

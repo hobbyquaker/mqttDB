@@ -50,6 +50,7 @@ mqtt.on('close', () => {
     }
 });
 
+/* istanbul ignore next */
 mqtt.on('error', err => {
     log.error('mqtt', err);
 });
@@ -68,7 +69,7 @@ mqtt.on('message', (topic, payload) => {
     const match = mw(topic, config.name + '/+/#');
     const [cmd, id] = match;
 
-    if (!match) {
+    if (!match || !id) {
         log.error('malformed topic', topic);
         return;
     }
@@ -93,11 +94,13 @@ mqtt.on('message', (topic, payload) => {
             try {
                 core[cmd](id, data);
             } catch (err) {
+                /* istanbul ignore next */
                 log.error('error in mqtt message handler', err.message);
             }
 
             break;
 
+        /* istanbul ignore next */
         default:
             log.error('unknown cmd', cmd);
     }
