@@ -166,6 +166,24 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/set/test1', JSON.stringify(doc));
         }, 500);
     });
+    it('should log error on malformed payload', function (done) {
+        this.timeout(20000);
+        procSubscribe(/malformed payload/, () => {
+            done();
+        });
+        setTimeout(() => {
+            mqtt.publish(dbId + '/set/test5', '}{');
+        }, 500);
+    });
+    it('should log error on malformed topic', function (done) {
+        this.timeout(20000);
+        procSubscribe(/malformed topic/, () => {
+            done();
+        });
+        setTimeout(() => {
+            mqtt.publish(dbId + '/set/', '{}');
+        }, 500);
+    });
     it('should extend a document', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/doc/test1', payload => {
