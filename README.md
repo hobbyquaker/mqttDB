@@ -67,7 +67,7 @@ that is described by the document as id.
 
 ### Create/overwrite a document
 
-To create or overwrite an Object with the id `hue/light/livingroom` you have to publish on the topic 
+To create or overwrite a document with the id `hue/light/livingroom` you have to publish on the topic 
 `db/set/hue/light/livingroom`. The payload has to be a JSON object, e.g. 
 `{"type": "light", "name": "hue light livingroom"}`. As soon as the document was created the document itself is 
 published retained on the topic `db/doc/hue/lights/livingroom`.
