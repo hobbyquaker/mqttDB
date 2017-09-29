@@ -60,7 +60,7 @@ mqtt.on('offline', () => {
 });
 
 mqtt.on('reconnect', () => {
-    log.info('mqtt reconnect');
+    log.debug('mqtt reconnect');
 });
 
 mqtt.on('message', (topic, payload) => {
