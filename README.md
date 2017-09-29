@@ -1,5 +1,8 @@
 <img align="left" src="https://raw.githubusercontent.com/wiki/hobbyquaker/mqttDB/images/logo.png">
 
+This is a NoSQL Database, to be precise: a JSON Document Store with MQTT interface, CouchDB/MapReduce inspired Views,
+implemented in Node.js. (Yeah, Buzzword Bingo! 🤠)
+
 [![NPM version](https://badge.fury.io/js/mqttdb.svg)](http://badge.fury.io/js/mqttdb)
 [![Dependency Status](https://img.shields.io/gemnasium/hobbyquaker/mqttDB.svg?maxAge=2592000)](https://gemnasium.com/github.com/hobbyquaker/mqttDB)
 [![Build Status](https://travis-ci.org/hobbyquaker/mqttDB.svg?branch=master)](https://travis-ci.org/hobbyquaker/mqttDB)
@@ -7,8 +10,6 @@
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![License][mit-badge]][mit-url]
 
-> This is a NoSQL Database, to be precise: a JSON Document Store with MQTT interface, CouchDB/MapReduce inspired Views,
-implemented in Node.js. (Yeah, Buzzword Bingo! 🤠)
 
 It's intended to be used as a database for storing metadata for systems that use MQTT as message bus, I'm using it in 
 conjunction with [mqtt-smarthome](https://github.com/mqtt-smarthome/mqtt-smarthome), but I think it could be useful in
