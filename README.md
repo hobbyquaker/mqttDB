@@ -30,6 +30,7 @@ _Note that this project is not associated with or endorsed by http://mqtt.org_
 * [Documents](https://github.com/hobbyquaker/mqttDB/wiki/Documents)
   * [Document IDs](https://github.com/hobbyquaker/mqttDB/wiki/Documents#ids)
   * [Create or Overwrite Documents](https://github.com/hobbyquaker/mqttDB/wiki/Documents#create-or-overwrite-a-document)
+  * [Extend Documents](https://github.com/hobbyquaker/mqttDB/wiki/Documents#extend-a-document)
   * [Delete Documents](https://github.com/hobbyquaker/mqttDB/wiki/Documents#deletion-of-documents)
   * [Internal Properties](https://github.com/hobbyquaker/mqttDB/wiki/Documents#internal-properties)
 * [Views](https://github.com/hobbyquaker/mqttDB/wiki/Views)
