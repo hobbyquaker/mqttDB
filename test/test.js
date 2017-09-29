@@ -10,6 +10,10 @@ const streamSplitter = require('stream-splitter');
 const request = require('request');
 const io = require('socket.io-client');
 
+if (process.platform === 'darwin') {
+    cp.spawn('/usr/local/bin/brew', ['services', 'start', 'mosquitto']);
+}
+
 const Mqtt = require('mqtt');
 const mqtt = Mqtt.connect('mqtt://127.0.0.1');
 
@@ -194,6 +198,34 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/extend/test1', JSON.stringify({muh: 'kuh'}));
         }, 500);
     });
+    it('should extend a non-existing document', function (done) {
+        this.timeout(20000);
+        mqttSubscribeOnce(dbId + '/doc/doc6', payload => {
+            should.deepEqual({_id: 'doc6', _rev: 0, muh: 'kuh'}, payload);
+            done();
+        });
+        setTimeout(() => {
+            mqtt.publish(dbId + '/extend/doc6', JSON.stringify({muh: 'kuh'}));
+        }, 500);
+    });
+    it('should not do anything on extending existing document', function (done) {
+        mqttSubscribeOnceRetain(dbId + '/doc/doc6', payload => {
+            should.deepEqual({_id: 'doc6', _rev: 0, muh: 'kuh'}, payload);
+            done();
+        });
+        setTimeout(() => {
+            mqtt.publish(dbId + '/extend/doc6', JSON.stringify({muh: 'kuh'}));
+        }, 500);
+    });
+    it('should not do anything on setting existing document', function (done) {
+        mqttSubscribeOnceRetain(dbId + '/doc/doc6', payload => {
+            should.deepEqual({_id: 'doc6', _rev: 0, muh: 'kuh'}, payload);
+            done();
+        });
+        setTimeout(() => {
+            mqtt.publish(dbId + '/set/doc6', JSON.stringify({muh: 'kuh'}));
+        }, 500);
+    });
     it('should set a property', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/doc/test1', payload => {
@@ -202,6 +234,15 @@ describe('document test1', () => {
         });
         setTimeout(() => {
             mqtt.publish(dbId + '/prop/test1', JSON.stringify({method: 'set', prop: 'bla', val: 'blubb'}));
+        }, 500);
+    });
+    it('should not do anything on setting existing property', function (done) {
+        mqttSubscribeOnceRetain(dbId + '/doc/doc6', payload => {
+            should.deepEqual({_id: 'doc6', _rev: 0, muh: 'kuh'}, payload);
+            done();
+        });
+        setTimeout(() => {
+            mqtt.publish(dbId + '/prop/doc6', JSON.stringify({method: 'set', prop: 'muh', val: 'kuh'}));
         }, 500);
     });
     it('should overwrite a property', function (done) {
@@ -258,6 +299,16 @@ describe('document test1', () => {
         });
         setTimeout(() => {
             mqtt.publish(dbId + '/set/test1', '');
+        }, 500);
+    });
+    it('should delete a document', function (done) {
+        this.timeout(20000);
+        mqttSubscribeOnce(dbId + '/doc/doc6', payload => {
+            payload.should.equal('');
+            done();
+        });
+        setTimeout(() => {
+            mqtt.publish(dbId + '/set/doc6', '');
         }, 500);
     });
 });
