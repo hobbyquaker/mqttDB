@@ -1,5 +1,4 @@
-
-[[https://raw.githubusercontent.com/wiki/hobbyquaker/mqttDB/images/logo.png]]
+![](https://raw.githubusercontent.com/wiki/hobbyquaker/mqttDB/images/logo.png "mqttDB")
 
 [![NPM version](https://badge.fury.io/js/mqttdb.svg)](http://badge.fury.io/js/mqttdb)
 [![Dependency Status](https://img.shields.io/gemnasium/hobbyquaker/mqttDB.svg?maxAge=2592000)](https://gemnasium.com/github.com/hobbyquaker/mqttDB)
