@@ -497,6 +497,32 @@ describe('socket.io', () => {
     });
 });
 
+describe('mqtt connection', () => {
+    it('should log disconnection from broker', function (done) {
+        this.timeout(20000);
+        procSubscribe(/mqtt close/, () => {
+            done();
+        });
+        cp.spawn('sudo /etc/init.d/mosquitto', ['stop']);
+    });
+
+    it('should try to reconnect to the broker', function (done) {
+        this.timeout(30000);
+        procSubscribe(/mqtt reconnect/, () => {
+            done();
+        });
+    });
+
+    it('should log reconnection to broker', function (done) {
+        this.timeout(20000);
+        procSubscribe(/mqtt connected/, () => {
+            done();
+        });
+        cp.spawn('sudo /etc/init.d/mosquitto', ['start']);
+    });
+});
+
+
 
 describe('stop daemon', () => {
     it('should stop mqttDB', function (done) {
