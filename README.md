@@ -25,14 +25,19 @@ _Note that this project is not associated with or endorsed by http://mqtt.org_
 
 * [Install](https://github.com/hobbyquaker/mqttDB/wiki/Install)
 * [Command Line Parameters](https://github.com/hobbyquaker/mqttDB/wiki/Command-Line-Parameters)
+  * [Connecting to the MQTT Broker](https://github.com/hobbyquaker/mqttDB/wiki/Command-Line-Parameters#connecting-to-the-mqtt-broker)
 * [WebUI](https://github.com/hobbyquaker/mqttDB/wiki/WebUI)
 * [Documents](https://github.com/hobbyquaker/mqttDB/wiki/Documents)
 * [Views](https://github.com/hobbyquaker/mqttDB/wiki/Views)
+  * [Example Views](Views#example-views)
 * [Topic Reference](https://github.com/hobbyquaker/mqttDB/wiki/Topics)
 * [Performance](https://github.com/hobbyquaker/mqttDB/wiki/Performance)
 
 
 ## Contributing
+
+I appreciate any form of feedback, may it be critics, rants, questions, suggestions, feature requests, ... Feel free
+to [create an Issue](https://github.com/hobbyquaker/mqttDB/issues/new)!
 
 Pull Requests Welcome! 😀
 
