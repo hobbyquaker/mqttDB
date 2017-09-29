@@ -503,7 +503,7 @@ describe('mqtt connection', () => {
         procSubscribe(/mqtt close/, () => {
             done();
         });
-        cp.spawn('sudo /etc/init.d/mosquitto', ['stop']);
+        cp.spawn('/usr/bin/sudo', ['/etc/init.d/mosquitto', 'stop']);
     });
 
     it('should try to reconnect to the broker', function (done) {
@@ -518,7 +518,7 @@ describe('mqtt connection', () => {
         procSubscribe(/mqtt connected/, () => {
             done();
         });
-        cp.spawn('sudo /etc/init.d/mosquitto', ['start']);
+        cp.spawn('/usr/bin/sudo', ['/etc/init.d/mosquitto', 'start']);
     });
 });
 
