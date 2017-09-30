@@ -8,6 +8,7 @@ const config = require('yargs')
     .describe('i', 'web server interface')
     .describe('x', 'diable web server')
     .describe('w', 'number of worker processes')
+    .describe('s', 'timeout in milliseconds for map/reduce script execution')
     .describe('h', 'show help')
     .alias({
         h: 'help',
@@ -17,7 +18,8 @@ const config = require('yargs')
         i: 'web-interface',
         x: 'web-disable',
         p: 'web-port',
-        w: 'workers'
+        w: 'workers',
+        s: 'script-timeout'
     })
     .default({
         u: 'mqtt://127.0.0.1',
@@ -25,7 +27,8 @@ const config = require('yargs')
         n: 'db',
         v: 'info',
         p: 8092,
-        w: os.cpus().length
+        w: os.cpus().length,
+        s: 10000
     })
     .version()
     .help('help')
