@@ -13,7 +13,7 @@
     "lintfix": "xo --fix",
     "testonly": "mocha test/test.js",
     "testcov": "nyc mocha test/test.js",
-    "doc": "jsdoc2md -f lib/worker.js > ../mqttDB.wiki/Sandbox.md"
+    "doc": "jsdoc2md -f lib/worker.js -t jsdoc/sandbox.hbs > ../mqttDB.wiki/Sandbox.md"
   },
   "engines": {
     "node": ">=6.0.0"
