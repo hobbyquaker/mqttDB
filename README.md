@@ -1,7 +1,6 @@
-<img align="left" src="https://raw.githubusercontent.com/wiki/hobbyquaker/mqttDB/images/logo.png">
+<img align="left" src="https://raw.githubusercontent.com/wiki/hobbyquaker/mqttDB/images/logo.png"> This is a NoSQL Database, to be precise: a JSON document store with MQTT interface, CouchDB/MapReduce inspired views,
+implemented in Node.js. Yes, Buzzword Bingo! 🤠
 
-This is a NoSQL Database, to be precise: a JSON Document Store with MQTT interface, CouchDB/MapReduce inspired Views,
-implemented in Node.js. (Yeah, Buzzword Bingo! 🤠)
 
 [![NPM version](https://badge.fury.io/js/mqttdb.svg)](http://badge.fury.io/js/mqttdb)
 [![Dependency Status](https://img.shields.io/gemnasium/hobbyquaker/mqttDB.svg?maxAge=2592000)](https://gemnasium.com/github.com/hobbyquaker/mqttDB)
