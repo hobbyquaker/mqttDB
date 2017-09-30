@@ -15,14 +15,15 @@ It's intended to be used as a database for storing metadata in systems that use 
 conjunction with [mqtt-smarthome](https://github.com/mqtt-smarthome/mqtt-smarthome), but I think it could be useful in
 other MQTT based environments also.
 
-You can create/modify/delete documents by publishing JSON payloads to MQTT and receive document changes by simply 
-subscribing to certain topics. You can create views by defining map and reduce functions in javascript and filter 
+You can create and modify documents by publishing JSON payloads to MQTT and receive document changes by simply 
+subscribing to certain topics. You can create views by defining map and reduce functions in Javascript and filter 
 documents with MQTT wildcards.
 
 _Note that this project is not associated with or endorsed by http://mqtt.org_
 
 ## Documentation
 
+* [Introduction](https://github.com/hobbyquaker/mqttDB/wiki/Introduction)
 * [Install](https://github.com/hobbyquaker/mqttDB/wiki/Install)
 * [Command Line Parameters](https://github.com/hobbyquaker/mqttDB/wiki/Command-Line-Parameters)
   * [Connecting to the MQTT Broker](https://github.com/hobbyquaker/mqttDB/wiki/Command-Line-Parameters#connecting-to-the-mqtt-broker)
@@ -32,6 +33,7 @@ _Note that this project is not associated with or endorsed by http://mqtt.org_
   * [Create or Overwrite Documents](https://github.com/hobbyquaker/mqttDB/wiki/Documents#create-or-overwrite-a-document)
   * [Extend Documents](https://github.com/hobbyquaker/mqttDB/wiki/Documents#extend-a-document)
   * [Delete Documents](https://github.com/hobbyquaker/mqttDB/wiki/Documents#deletion-of-documents)
+  * [Property Access](https://github.com/hobbyquaker/mqttDB/wiki/Documents#property-access)
   * [Internal Properties](https://github.com/hobbyquaker/mqttDB/wiki/Documents#internal-properties)
 * [Views](https://github.com/hobbyquaker/mqttDB/wiki/Views)
   * [What are Views?](https://github.com/hobbyquaker/mqttDB/wiki/Views#what-are-views)
