@@ -1,5 +1,4 @@
 <img align="left" src="https://raw.githubusercontent.com/wiki/hobbyquaker/mqttDB/images/logo.png">
-
 This is a NoSQL Database, to be precise: a JSON Document Store with MQTT interface, CouchDB/MapReduce inspired Views,
 implemented in Node.js. (Yeah, Buzzword Bingo! 🤠)
 
