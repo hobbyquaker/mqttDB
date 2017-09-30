@@ -49,8 +49,8 @@ _Note that this project is not associated with or endorsed by http://mqtt.org_
 
 ## Contributing
 
-Any form of feedback is appreciated, may it be questions, suggestions, feature requests, bug reports, 
-critics, salutes or rants! 😉 Feel free to [create an Issue](https://github.com/hobbyquaker/mqttDB/issues/new)!
+Any form of feedback is highly appreciated, may it be questions, suggestions, feature requests, bug reports, critics, 
+salutes or rants! 😉 Feel free to [create an Issue](https://github.com/hobbyquaker/mqttDB/issues/new)!
 
 Pull Requests Welcome!
 
