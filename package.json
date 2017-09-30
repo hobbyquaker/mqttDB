@@ -12,7 +12,8 @@
     "lint": "xo",
     "lintfix": "xo --fix",
     "testonly": "mocha test/test.js",
-    "testcov": "nyc mocha test/test.js"
+    "testcov": "nyc mocha test/test.js",
+    "doc": "jsdoc2md -f lib/worker.js > ../mqttDB.wiki/Sandbox.md"
   },
   "engines": {
     "node": ">=6.0.0"
@@ -42,6 +43,7 @@
   "devDependencies": {
     "camo-purge": "latest",
     "coveralls": "latest",
+    "jsdoc-to-markdown": "latest",
     "mocha": "latest",
     "nyc": "latest",
     "request": "latest",
