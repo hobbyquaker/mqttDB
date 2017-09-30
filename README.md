@@ -16,8 +16,8 @@ conjunction with [mqtt-smarthome](https://github.com/mqtt-smarthome/mqtt-smartho
 other MQTT based environments also.
 
 You can create and modify documents by publishing JSON payloads to MQTT and receive document changes by simply 
-subscribing to certain topics. You can create views by defining map and reduce functions in Javascript and filter 
-documents with MQTT wildcards.
+subscribing to certain topics. You can create views by defining map and reduce functions and filter documents ids with 
+MQTT style wildcards.
 
 _Note that this project is not associated with or endorsed by http://mqtt.org_
 
