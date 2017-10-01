@@ -1,6 +1,6 @@
 {
   "name": "mqttdb",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "JSON Store with MQTT Interface",
   "main": "index.js",
   "preferGlobal": true,
