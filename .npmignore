@@ -1,2 +1,7 @@
 .idea
 .travis.yml
+test
+jsdoc
+coverage
+.nyc_output
+.gitignore
