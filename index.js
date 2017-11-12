@@ -103,7 +103,7 @@ mqtt.on('message', (topic, payload) => {
             break;
 
         case 'get':
-            let [type, gid] = mw(topic, config.name + '/get/+/#');
+            const [type, gid] = mw(topic, config.name + '/get/+/#');
             get(type, gid);
             break;
 
