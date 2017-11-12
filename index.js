@@ -127,13 +127,20 @@ function get(type, id) {
 }
 
 core.on('ready', () => {
-    const oIds = Object.keys(core.db);
     if (!config.retainDisable) {
-        oIds.forEach(id => {
+        const did = Object.keys(core.db);
+        did.forEach(id => {
             mqtt.publish(config.name + '/doc/' + id, JSON.stringify(core.db[id]), {retain: true});
         });
-        if (oIds.length > 0) {
-            log.info('published ' + oIds.length + ' objects');
+        if (did.length > 0) {
+            log.info('published ' + did.length + ' docs');
+        }
+        const vid = Object.keys(core.views);
+        vid.forEach(id => {
+            mqtt.publish(config.name + '/view/' + id, JSON.stringify(core.views[id]), {retain: true});
+        });
+        if (vid.length > 0) {
+            log.info('published ' + vid.length + ' views');
         }
     }
     mqtt.publish(config.name + '/rev', String(core.rev), {retain: true});
