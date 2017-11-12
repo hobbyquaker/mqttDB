@@ -8,18 +8,20 @@ const config = require('yargs')
     .describe('i', 'web server interface')
     .describe('x', 'diable web server')
     .describe('w', 'number of worker processes')
+    .describe('r', 'disable retained publish of docs and views')
     .describe('s', 'timeout in milliseconds for map/reduce script execution')
     .describe('h', 'show help')
     .alias({
         h: 'help',
+        i: 'web-interface',
         n: 'name',
+        p: 'web-port',
+        r: 'retain-disable',
+        s: 'script-timeout',
         u: 'url',
         v: 'verbosity',
-        i: 'web-interface',
-        x: 'web-disable',
-        p: 'web-port',
         w: 'workers',
-        s: 'script-timeout'
+        x: 'web-disable'
     })
     .default({
         u: 'mqtt://127.0.0.1',

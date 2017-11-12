@@ -120,7 +120,7 @@ core.on('ready', () => {
 
 core.on('update', (id, data) => {
     log.debug('mqtt >', id, 'rev', data.rev);
-    mqtt.publish(config.name + '/doc/' + id, JSON.stringify(data), {retain: true});
+    mqtt.publish(config.name + '/doc/' + id, JSON.stringify(data), {retain: !config.retainDisable});
     log.debug('mqtt > rev', core.rev);
     mqtt.publish(config.name + '/rev', String(core.rev), {retain: true});
     io.emit('objectIds', Object.keys(core.db));
@@ -134,7 +134,7 @@ core.on('view', (id, data) => {
         log.debug('view', id, 'rev', core.views[id] && core.views[id]._rev);
     }
     const payload = data ? JSON.stringify(data) : '';
-    mqtt.publish(config.name + '/view/' + id, payload, {retain: true});
+    mqtt.publish(config.name + '/view/' + id, payload, {retain: !config.retainDisable});
     io.emit('viewIds', Object.keys(core.views));
 });
 
