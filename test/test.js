@@ -1,6 +1,6 @@
 /* global describe, it, should */
 
-const debug = false;
+const debug = true;
 
 require('should');
 
@@ -440,7 +440,7 @@ describe('restart daemon', () => {
     });
     it('should publish 2 documents', function (done) {
         this.timeout(20000);
-        procSubscribe(/published 2 objects/, data => {
+        procSubscribe(/published 2 docs/, data => {
             done();
         });
     });
