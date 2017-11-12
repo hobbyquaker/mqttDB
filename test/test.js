@@ -1,6 +1,6 @@
 /* global describe, it, should */
 
-const debug = true;
+const debug = false;
 
 require('should');
 
