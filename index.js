@@ -108,11 +108,13 @@ mqtt.on('message', (topic, payload) => {
 
 core.on('ready', () => {
     const oIds = Object.keys(core.db);
-    oIds.forEach(id => {
-        mqtt.publish(config.name + '/doc/' + id, JSON.stringify(core.db[id]), {retain: true});
-    });
-    if (oIds.length > 0) {
-        log.info('published ' + oIds.length + ' objects');
+    if (!config.retainDisable) {
+        oIds.forEach(id => {
+            mqtt.publish(config.name + '/doc/' + id, JSON.stringify(core.db[id]), {retain: true});
+        });
+        if (oIds.length > 0) {
+            log.info('published ' + oIds.length + ' objects');
+        }
     }
     mqtt.publish(config.name + '/rev', String(core.rev), {retain: true});
     mqtt.publish(config.name + '/connected', '2', {retain: true});
