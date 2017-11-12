@@ -41,6 +41,8 @@ mqtt.on('connect', () => {
     mqtt.subscribe(config.name + '/prop/#');
     log.debug('mqtt subscribe', config.name + '/query/#');
     mqtt.subscribe(config.name + '/query/#');
+    log.debug('mqtt subscribe', config.name + '/get/+/#');
+    mqtt.subscribe(config.name + '/get/+/#');
 });
 
 mqtt.on('close', () => {
@@ -100,11 +102,29 @@ mqtt.on('message', (topic, payload) => {
 
             break;
 
+        case 'get':
+            let [type, gid] = mw(topic, config.name + '/get/+/#');
+            get(type, id);
+            break;
+
         /* istanbul ignore next */
         default:
             log.error('unknown cmd', cmd);
     }
 });
+
+function get(type, id) {
+    switch (type) {
+        case 'doc':
+            mqtt.publish(config.name + '/doc/' + id, core.db[id] ? JSON.stringify(core.db[id]) : '');
+            break;
+        case 'view':
+            mqtt.publish(config.name + '/view/' + id, core.views[id] ? JSON.stringify(core.views[id]) : '');
+            break;
+        default:
+            log.error('unknown get type', type);
+    }
+}
 
 core.on('ready', () => {
     const oIds = Object.keys(core.db);
