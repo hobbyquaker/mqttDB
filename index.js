@@ -104,7 +104,7 @@ mqtt.on('message', (topic, payload) => {
 
         case 'get':
             let [type, gid] = mw(topic, config.name + '/get/+/#');
-            get(type, id);
+            get(type, gid);
             break;
 
         /* istanbul ignore next */
