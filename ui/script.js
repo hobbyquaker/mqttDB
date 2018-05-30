@@ -278,7 +278,7 @@ $buttonSaveObject.click(() => {
             $indicatorObjectSaved.show();
             getObject($inputObjectId.val());
         } else if (res.startsWith('rev mismatch')) {
-            const [, revServer] = res.match(/rev mismatch ([0-9]+)/);
+            const [, revServer] = res.match(/rev mismatch (\d+)/);
             $objectRevServer.html(revServer);
             $objectRevEditor.html($objectRev.html());
             $objectConflictId.html($inputObjectId.val());
