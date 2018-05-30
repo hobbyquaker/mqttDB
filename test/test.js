@@ -170,6 +170,35 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/set/test1', JSON.stringify(doc));
         }, 500);
     });
+    it('get a document', function (done) {
+        this.timeout(20000);
+        mqttSubscribeOnce(dbId + '/doc/test1', payload => {
+            should.deepEqual({type: 'test', _id: 'test1', _rev: 0}, payload);
+            done();
+        });
+        setTimeout(() => {
+            mqtt.publish(dbId + '/get/doc/test1');
+        }, 500);
+    });
+    it('get a non-existing document', function (done) {
+        this.timeout(20000);
+        mqttSubscribeOnce(dbId + '/doc/test0', payload => {
+            payload.should.equal('');
+            done();
+        });
+        setTimeout(() => {
+            mqtt.publish(dbId + '/get/doc/test0');
+        }, 500);
+    });
+    it('log error on unknown get type', function (done) {
+        this.timeout(20000);
+        procSubscribe(/unknown get type/, () => {
+            done();
+        });
+        setTimeout(() => {
+            mqtt.publish(dbId + '/get/foo/bar');
+        }, 500);
+    });
     it('log error on malformed payload', function (done) {
         this.timeout(20000);
         procSubscribe(/malformed payload/, () => {
@@ -321,6 +350,22 @@ describe('view test1', () => {
             done();
         });
         mqtt.publish(dbId + '/query/test1', JSON.stringify({filter: '#', map: 'if (this.type === "muh") emit(this._id)', reduce: 'return result'}));
+    });
+    it('get a view', function (done) {
+        this.timeout(20000);
+        mqttSubscribeOnce(dbId + '/view/test1', payload => {
+            should.deepEqual({ _id: 'test1', _rev: 0, result: [], length: 0 }, payload);
+            done();
+        });
+        mqtt.publish(dbId + '/get/view/test1');
+    });
+    it('get a non-existing view', function (done) {
+        this.timeout(20000);
+        mqttSubscribeOnce(dbId + '/view/test0', payload => {
+            payload.should.equal('');
+            done();
+        });
+        mqtt.publish(dbId + '/get/view/test0');
     });
     it('publish the new view after adding a document', function (done) {
         this.timeout(20000);
