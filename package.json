@@ -32,7 +32,7 @@
     "jquery": "^3.2.1",
     "jquery-resizable-dom": "^0.32.0",
     "json-stringify-pretty-compact": "https://github.com/hobbyquaker/json-stringify-pretty-compact",
-    "mqtt": "^2.13.0",
+    "mqtt": "^2.18.0",
     "mqtt-wildcard": "^3.0.9",
     "obj-ease": "^1.0.1",
     "persist-json": "^1.2.0",
