@@ -24,13 +24,13 @@
   "license": "MIT",
   "dependencies": {
     "async": "^2.5.0",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^4.1.1",
     "bootstrap-3-typeahead": "^4.0.2",
     "codemirror": "^5.29.0",
     "express": "^4.15.4",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
-    "jquery-resizable-dom": "^0.20.0",
+    "jquery-resizable-dom": "^0.32.0",
     "json-stringify-pretty-compact": "https://github.com/hobbyquaker/json-stringify-pretty-compact",
     "mqtt": "^2.13.0",
     "mqtt-wildcard": "^3.0.9",
@@ -38,7 +38,7 @@
     "persist-json": "^1.2.0",
     "socket.io": "^2.0.3",
     "yalm": "^4.1.0",
-    "yargs": "^10.0.3"
+    "yargs": "^11.0.0"
   },
   "devDependencies": {
     "camo-purge": "latest",
