@@ -3,7 +3,7 @@ implemented in Node.js. 🤠
 
 
 [![NPM version](https://badge.fury.io/js/mqttdb.svg)](http://badge.fury.io/js/mqttdb)
-[![Dependency Status](https://img.shields.io/gemnasium/hobbyquaker/mqttDB.svg?maxAge=2592000)](https://gemnasium.com/github.com/hobbyquaker/mqttDB)
+[![Dependencies Status](https://david-dm.org/hobbyquaker/mqttDB/status.svg)](https://david-dm.org/hobbyquaker/mqttDB)
 [![Build Status](https://travis-ci.org/hobbyquaker/mqttDB.svg?branch=master)](https://travis-ci.org/hobbyquaker/mqttDB)
 [![Coverage Status](https://coveralls.io/repos/github/hobbyquaker/mqttDB/badge.svg?branch=master)](https://coveralls.io/github/hobbyquaker/mqttDB?branch=master)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
