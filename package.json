@@ -56,6 +56,11 @@
     "space": 4,
     "ignore": [
       "test/test.js"
-    ]
+    ],
+    "rules": {
+      "no-case-declarations": "warn",
+      "no-restricted-modules": "warn",
+      "node/no-deprecated-api": "warn"
+    }
   }
 }
