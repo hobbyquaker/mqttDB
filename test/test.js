@@ -118,40 +118,40 @@ describe('start daemons', () => {
         });
         startDb();
     });
-    it('should connect to the mqtt broker', function (done) {
+    it('connect to the mqtt broker', function (done) {
         this.timeout(20000);
         procSubscribe(/mqtt connected/, data => {
             done();
         });
     });
-    it('should spawn workers', function (done) {
+    it('spawn workers', function (done) {
         this.timeout(20000);
         procSubscribe(/all workers ready/, data => {
             done();
         });
     });
-    it('should complete init', function (done) {
+    it('complete init', function (done) {
         this.timeout(20000);
         procSubscribe(/init complete/, data => {
             done();
         });
     });
-    it('should subscribe to set', function (done) {
+    it('subscribe to set', function (done) {
         procSubscribe(/mqtt subscribe db[0-9a-f]+\/set\/#/, () => {
             done();
         });
     });
-    it('should subscribe to extend', function (done) {
+    it('subscribe to extend', function (done) {
         procSubscribe(/mqtt subscribe db[0-9a-f]+\/extend\/#/, () => {
             done();
         });
     });
-    it('should subscribe to prop', function (done) {
+    it('subscribe to prop', function (done) {
         procSubscribe(/mqtt subscribe db[0-9a-f]+\/prop\/#/, () => {
             done();
         });
     });
-    it('should subscribe to query', function (done) {
+    it('subscribe to query', function (done) {
         procSubscribe(/mqtt subscribe db[0-9a-f]+\/query\/#/, () => {
             done();
         });
@@ -159,7 +159,7 @@ describe('start daemons', () => {
 });
 
 describe('document test1', () => {
-    it('should create a document', function (done) {
+    it('create a document', function (done) {
         this.timeout(20000);
         const doc = {type: 'test'};
         mqttSubscribeOnce(dbId + '/doc/test1', payload => {
@@ -170,7 +170,7 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/set/test1', JSON.stringify(doc));
         }, 500);
     });
-    it('should log error on malformed payload', function (done) {
+    it('log error on malformed payload', function (done) {
         this.timeout(20000);
         procSubscribe(/malformed payload/, () => {
             done();
@@ -179,7 +179,7 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/set/test5', '}{');
         }, 500);
     });
-    it('should log error on malformed topic', function (done) {
+    it('log error on malformed topic', function (done) {
         this.timeout(20000);
         procSubscribe(/malformed topic/, () => {
             done();
@@ -188,7 +188,7 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/set/', '{}');
         }, 500);
     });
-    it('should extend a document', function (done) {
+    it('extend a document', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/doc/test1', payload => {
             should.deepEqual({type: 'test', _id: 'test1', _rev: 1, muh: 'kuh'}, payload);
@@ -198,7 +198,7 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/extend/test1', JSON.stringify({muh: 'kuh'}));
         }, 500);
     });
-    it('should extend a non-existing document', function (done) {
+    it('extend a non-existing document', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/doc/doc6', payload => {
             should.deepEqual({_id: 'doc6', _rev: 0, muh: 'kuh'}, payload);
@@ -208,7 +208,7 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/extend/doc6', JSON.stringify({muh: 'kuh'}));
         }, 500);
     });
-    it('should not do anything on extending existing document', function (done) {
+    it('do nothing on extending existing document', function (done) {
         mqttSubscribeOnceRetain(dbId + '/doc/doc6', payload => {
             should.deepEqual({_id: 'doc6', _rev: 0, muh: 'kuh'}, payload);
             done();
@@ -217,7 +217,7 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/extend/doc6', JSON.stringify({muh: 'kuh'}));
         }, 500);
     });
-    it('should not do anything on setting existing document', function (done) {
+    it('do nothing on setting existing document', function (done) {
         mqttSubscribeOnceRetain(dbId + '/doc/doc6', payload => {
             should.deepEqual({_id: 'doc6', _rev: 0, muh: 'kuh'}, payload);
             done();
@@ -226,7 +226,7 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/set/doc6', JSON.stringify({muh: 'kuh'}));
         }, 500);
     });
-    it('should set a property', function (done) {
+    it('set a property', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/doc/test1', payload => {
             should.deepEqual({type: 'test', _id: 'test1', _rev: 2, muh: 'kuh', bla: 'blubb'}, payload);
@@ -236,7 +236,7 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/prop/test1', JSON.stringify({method: 'set', prop: 'bla', val: 'blubb'}));
         }, 500);
     });
-    it('should not do anything on setting existing property', function (done) {
+    it('do nothing on setting existing property', function (done) {
         mqttSubscribeOnceRetain(dbId + '/doc/doc6', payload => {
             should.deepEqual({_id: 'doc6', _rev: 0, muh: 'kuh'}, payload);
             done();
@@ -245,7 +245,7 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/prop/doc6', JSON.stringify({method: 'set', prop: 'muh', val: 'kuh'}));
         }, 500);
     });
-    it('should overwrite a property', function (done) {
+    it('overwrite a property', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/doc/test1', payload => {
             should.deepEqual({type: 'test', _id: 'test1', _rev: 3, muh: 'kuh', bla: 'bla'}, payload);
@@ -255,7 +255,7 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/prop/test1', JSON.stringify({method: 'set', prop: 'bla', val: 'bla'}));
         }, 500);
     });
-    it('should create a property', function (done) {
+    it('create a property', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/doc/test1', payload => {
             should.deepEqual({type: 'test', _id: 'test1', _rev: 4, muh: 'kuh', bla: 'bla', foo: 'bar'}, payload);
@@ -266,7 +266,7 @@ describe('document test1', () => {
         }, 500);
     });
 
-    it('should should not overwrite a property', function (done) {
+    it('should not overwrite a property', function (done) {
         this.timeout(20000);
 
         setTimeout(() => {
@@ -281,7 +281,7 @@ describe('document test1', () => {
         }, 2000);
     });
 
-    it('should should delete a property', function (done) {
+    it('should delete a property', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/doc/test1', payload => {
             should.deepEqual({type: 'test', _id: 'test1', _rev: 5, muh: 'kuh', bla: 'bla'}, payload);
@@ -291,7 +291,7 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/prop/test1', JSON.stringify({method: 'del', prop: 'foo'}));
         }, 500);
     });
-    it('should delete a document', function (done) {
+    it('delete a document', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/doc/test1', payload => {
             payload.should.equal('');
@@ -301,7 +301,7 @@ describe('document test1', () => {
             mqtt.publish(dbId + '/set/test1', '');
         }, 500);
     });
-    it('should delete a document', function (done) {
+    it('delete a document', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/doc/doc6', payload => {
             payload.should.equal('');
@@ -314,7 +314,7 @@ describe('document test1', () => {
 });
 
 describe('view test1', () => {
-    it('should create a view', function (done) {
+    it('create a view', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/view/test1', payload => {
             should.deepEqual({ _id: 'test1', _rev: 0, result: [], length: 0 }, payload);
@@ -322,7 +322,7 @@ describe('view test1', () => {
         });
         mqtt.publish(dbId + '/query/test1', JSON.stringify({filter: '#', map: 'if (this.type === "muh") emit(this._id)', reduce: 'return result'}));
     });
-    it('should publish the new view after adding a document', function (done) {
+    it('publish the new view after adding a document', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/view/test1', payload => {
             should.deepEqual({ _id: 'test1', _rev: 1, result: [ 'doc1' ], length: 1 }, payload);
@@ -332,7 +332,7 @@ describe('view test1', () => {
             mqtt.publish(dbId + '/set/doc1', JSON.stringify({type: 'muh'}));
         }, 2000);
     });
-    it('should not change the view after adding a document not matching the query', function (done) {
+    it('not change the view after adding a document not matching the query', function (done) {
         this.timeout(20000);
         mqtt.publish(dbId + '/set/doc2', JSON.stringify({type: 'foo'}));
         setTimeout(() => {
@@ -342,7 +342,7 @@ describe('view test1', () => {
             });
         }, 2000);
     });
-    it('should publish the new view after altering the query', function (done) {
+    it('publish the new view after altering the query', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/view/test1', payload => {
             should.deepEqual({ _id: 'test1', _rev: 2, result: [ 'doc2' ], length: 1 }, payload);
@@ -350,7 +350,7 @@ describe('view test1', () => {
         });
         mqtt.publish(dbId + '/query/test1', JSON.stringify({filter: '#', map: 'if (this.type === "foo") emit(this._id)', reduce: 'return result'}));
     });
-    it('should queue view execution', function (done) {
+    it('queue view execution', function (done) {
         this.timeout(20000);
         for (let i = 3; i < 50; i++) {
             mqtt.publish(dbId + '/set/doc' + i, JSON.stringify({type: 'foo'}));
@@ -380,7 +380,7 @@ describe('view test1', () => {
         }, 5000);
 
     });
-    it('should delete the view', function (done) {
+    it('delete the view', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/view/test1', payload => {
             payload.should.equal('');
@@ -391,7 +391,7 @@ describe('view test1', () => {
 });
 
 describe('view test2 script creation error', () => {
-    it('should publish an error', function (done) {
+    it('publish an error', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/view/test2', payload => {
             should.deepEqual({ _id: 'test2', _rev: -1, error: 'script creation: Unexpected identifier'}, payload);
@@ -402,7 +402,7 @@ describe('view test2 script creation error', () => {
 });
 
 describe('view test3 script execution error', () => {
-    it('should publish an error', function (done) {
+    it('publish an error', function (done) {
         this.timeout(20000);
         mqttSubscribeOnce(dbId + '/view/test3', payload => {
             should.deepEqual({ _id: 'test3', _rev: -1, error: 'script execution: Cannot read property \'type\' of undefined'}, payload);
@@ -413,7 +413,7 @@ describe('view test3 script execution error', () => {
 });
 
 describe('stop daemon', () => {
-    it('should stop mqttDB', function (done) {
+    it('stop mqttDB', function (done) {
         this.timeout(20000);
         proc.on('close', () => {
             done();
@@ -432,13 +432,13 @@ describe('restart daemon', () => {
         });
         startDb();
     });
-    it('should load the previous database', function (done) {
+    it('load the previous database', function (done) {
         this.timeout(20000);
         procSubscribe(/database loaded/, data => {
             done();
         });
     });
-    it('should publish 2 documents', function (done) {
+    it('publish 2 documents', function (done) {
         this.timeout(20000);
         procSubscribe(/published 2 docs/, data => {
             done();
@@ -447,7 +447,7 @@ describe('restart daemon', () => {
 });
 
 describe('webserver', () => {
-    it('should response with http 200 on /', function (done) {
+    it('response with http 200 on /', function (done) {
         this.timeout(20000);
         request('http://127.0.0.1:8092/', (err, res, body) => {
             if (res.statusCode) {
@@ -458,14 +458,14 @@ describe('webserver', () => {
 });
 
 describe('socket.io', () => {
-    it('should connect', function (done) {
+    it('connect', function (done) {
         const client = io.connect('http://127.0.0.1:8092');
         client.on('connect', () => {
             done();
             client.disconnect();
         });
     });
-    it('should receive objectIds on connect', function (done) {
+    it('receive objectIds on connect', function (done) {
         const client = io.connect('http://127.0.0.1:8092');
         client.on('objectIds', (data) => {
             client.disconnect();
@@ -473,7 +473,7 @@ describe('socket.io', () => {
             done();
         });
     });
-    it('should receive viewIds on connect', function (done) {
+    it('receive viewIds on connect', function (done) {
         const client = io.connect('http://127.0.0.1:8092');
         client.on('viewIds', (data) => {
             client.disconnect();
@@ -481,7 +481,7 @@ describe('socket.io', () => {
             done();
         });
     });
-    it('should get an object', function (done) {
+    it('get an object', function (done) {
         const client = io.connect('http://127.0.0.1:8092');
         client.emit('getObject', 'doc1', data => {
             client.disconnect();
@@ -489,7 +489,7 @@ describe('socket.io', () => {
             done();
         });
     });
-    it('should create a view', function (done) {
+    it('create a view', function (done) {
         this.timeout(20000);
         const client = io.connect('http://127.0.0.1:8092');
         mqttSubscribeOnce(dbId + '/view/test4', data => {
@@ -500,7 +500,7 @@ describe('socket.io', () => {
             client.disconnect();
         });
     });
-    it('should get a view', function (done) {
+    it('get a view', function (done) {
         this.timeout(20000);
         const client = io.connect('http://127.0.0.1:8092');
         setTimeout(() => {
@@ -515,7 +515,7 @@ describe('socket.io', () => {
             });
         }, 2000);
     });
-    it('should create a document', function (done) {
+    it('create a document', function (done) {
         this.timeout(20000);
         const client = io.connect('http://127.0.0.1:8092');
         mqttSubscribeOnce(dbId + '/doc/doc3', data => {
@@ -526,7 +526,7 @@ describe('socket.io', () => {
             client.disconnect();
         });
     });
-    it('should respond with error on revision conflict', function (done) {
+    it('respond with error on revision conflict', function (done) {
         this.timeout(20000);
         const client = io.connect('http://127.0.0.1:8092');
         client.emit('set', 'doc3', {foo: 'bar', _rev: -1}, (data) => {
@@ -535,7 +535,7 @@ describe('socket.io', () => {
             done();
         });
     });
-    it('should delete a document', function (done) {
+    it('delete a document', function (done) {
         this.timeout(20000);
         const client = io.connect('http://127.0.0.1:8092');
         mqttSubscribeOnce(dbId + '/doc/doc3', data => {
@@ -549,7 +549,7 @@ describe('socket.io', () => {
 });
 
 describe('mqtt connection', () => {
-    it('should log disconnection from broker', function (done) {
+    it('log disconnection from broker', function (done) {
         this.timeout(20000);
         procSubscribe(/mqtt close/, () => {
             done();
@@ -561,14 +561,14 @@ describe('mqtt connection', () => {
         }
     });
 
-    it('should try to reconnect to the broker', function (done) {
+    it('try to reconnect to the broker', function (done) {
         this.timeout(30000);
         procSubscribe(/mqtt reconnect/, () => {
             done();
         });
     });
 
-    it('should log reconnection to broker', function (done) {
+    it('log reconnection to broker', function (done) {
         this.timeout(20000);
         procSubscribe(/mqtt connected/, () => {
             done();
@@ -584,7 +584,7 @@ describe('mqtt connection', () => {
 
 
 describe('stop daemon', () => {
-    it('should stop mqttDB', function (done) {
+    it('stop mqttDB', function (done) {
         this.timeout(20000);
         proc.on('close', () => {
             done();
