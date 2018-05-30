@@ -127,6 +127,7 @@ function get(type, id) {
 }
 
 core.on('ready', () => {
+    /* istanbul ignore else */
     if (!config.retainDisable) {
         const did = Object.keys(core.db);
         did.forEach(id => {
